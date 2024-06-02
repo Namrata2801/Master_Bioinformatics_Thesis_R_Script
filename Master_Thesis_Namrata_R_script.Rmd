@@ -1,5 +1,5 @@
-# This notebook contains code for the analysis done for my master thesis project. 
-# Several dimensionality reduction plots were made using physico-chemical property scores and prediction scores on different dataset (canonical protein > 100 aa and peptides <= 75):
+# This R notebook contains code for the analysis done for my master thesis project. 
+# Several dimensionality reduction plots were made using physico-chemical property scores and prediction scores on different dataset (canonical proteins > 100 aa and peptides <= 75):
 # 1. Human microproteins (chen et al. paper), human Globular and membrane protein (UniProt), human IDPs (DisProt) and human peptides (NCBI) and physiochemcial properties of IDs (CIDH920105	CHOP780101	CHOP780201	CHOP780202	KLEP840101).
 # 2. Reference dataset: Human microproteins (chen et al. paper), human globular (SCOPe), membrane protein (mpstruc), human IDPs (DisProt) and human peptides (NCBI) and physiochemcial properties of IDs (CIDH920105	CHOP780101	CHOP780201	CHOP780202	KLEP840101).
 # 3. Human microproteins (chen et al. paper), human globular (SCOPe), membrane protein (mpstruc), human IDPs (DisProt) and human peptides (NCBI) and 5 randomly selected physiochemcial properties of IDs ( CIDH920105,	CHOP780101,	KLEP840101, CHAM830105,ONEK900101) out of eight obtained from clustering.
@@ -51,7 +51,9 @@ library(stats)
 pp_file_path <- "/Users/namrataxxx/Desktop/Master_Thesis_material/Docs_by_Joost/Physical_properties_edited.xlsx"
 pp_df <- read_excel(pp_file_path)
 head(pp_df)
-View(pp_df)
+#View(pp_df)
+```
+```{r}
 pp_df_properties <- pp_df[, -1]
 head(pp_df_properties)
 pp_df_scaled <- scale(pp_df_properties)
@@ -62,7 +64,9 @@ columns_to_add_pp_df <- pp_df[, 1]
 # Adding selected columns to pp_df_scaled
 pp_df_scaled <- cbind(columns_to_add_pp_df,pp_df_scaled)
 head(pp_df_scaled)
+```
 
+```{r}
 # Melt the dataframe for ggplot
 pp_df_melted_scaled <- melt(pp_df_scaled, id.vars = "AA", variable.name = "AminoAcid", value.name = "Score")
 
@@ -284,10 +288,13 @@ write.table(selected_data_5pp, 'normalized_peptideSeq_NCBI_new_5pp.txt', row.nam
 New_Micros_dim_j <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/5_Joost_IDs_Uniprot_Weismann_Disprot_NCBI/normalised_micros_weismann_5pp.txt", header=TRUE, sep="\t")
 dim(New_Micros_dim_j) # 10694  x  8 
 #View(New_Micros_dim_j)
+
 New_Disprot_dim_j <- fread("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/5_Joost_IDs_Uniprot_Weismann_Disprot_NCBI/normalized_disordered_Disprot_5pp.txt", header = TRUE, fill = TRUE, sep = "\t")
 dim(New_Disprot_dim_j) # 4587 x  8
+
 New_Human_memb_prot_uniprot_dim_j <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/5_Joost_IDs_Uniprot_Weismann_Disprot_NCBI/normalized_Transmemb_UniProt_5pp.txt", header=TRUE, sep="\t")
 dim(New_Human_memb_prot_uniprot_dim_j) # 10539 x 8
+
 New_Human_glob_prot_uniprot_dim_j <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/5_Joost_IDs_Uniprot_Weismann_Disprot_NCBI/normalized_globular_prot_5pp.txt", header=TRUE, sep="\t")
 dim(New_Human_glob_prot_uniprot_dim_j) # 373 x  8
 
@@ -316,7 +323,7 @@ dim(normalized_human_glob_prot_Uniprot_dim_j_longerthan100) # 363 x 8
 
 new_micros_t_dim_j <- New_Micros_dim_j[sample(nrow(New_Micros_dim_j), 5000),]  #subsampling to reduce microprotein set size 
 dim(new_micros_t_dim_j) # 5000 x  8
-head(new_micros_t_dim_j)
+#head(new_micros_t_dim_j)
 new_TM_t_dim_j <- normalized_human_membprot_uniprot_dim_j_longerthan100[sample(nrow(normalized_human_membprot_uniprot_dim_j_longerthan100), 5000),] #subsampling to reduce membrane protein set size
 dim(new_TM_t_dim_j) # 5000 x  8
 
@@ -327,7 +334,7 @@ new_micros_dim_j <- rbind(new_micros_ttt_dim_j,normalized_human_glob_prot_Unipro
 new_micros_dim_j <- rbind(new_micros_dim_j,normalized_human_peptideSeq_NCBI_new_5pp_smallerORequal75)
 dim(new_micros_dim_j) # 12813 x 8
 head(new_micros_dim_j)
-View(new_micros_dim_j)
+#View(new_micros_dim_j)
 sum(is.na(new_micros_dim_j))
 new_micros_dim_j <- na.omit(new_micros_dim_j)
 ```
@@ -342,7 +349,7 @@ umap_result_j_dim_j <- umap(umap_data_new_micros_dim_j,n_neighbors=15, min_dist=
 
 # Creating a data frame for plotting that includes the UMAP dimensions and the protein type
 plot_data_j <- data.frame(UMAP1 = umap_result_j_dim_j$layout[,1], UMAP2 = umap_result_j_dim_j$layout[,2], Type = new_micros_dim_j$type)
-head(plot_data_j)
+#head(plot_data_j)
 
 my_colors_new_micros_dim_j1 <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
 
@@ -360,7 +367,7 @@ p1_new
 
 ```{r}
 # Performing t-SNE
-set.seed(42) # Setting a random seed for reproducibility
+set.seed(42) 
 tsne_result_dimj <- Rtsne(dist(umap_data_new_micros_dim_j), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -382,17 +389,17 @@ p3_t_SNE
 ```{r}
 # Performing t-SNE on scaled physical property scores
 new_micros_dim_j_properties <- new_micros_dim_j[, c(4:8)]
-head(new_micros_dim_j_properties)
+#head(new_micros_dim_j_properties)
 
 # Standardizing the properties in dataframe combined_disport_control2_5PP_J
 new_micros_dim_j_scaled <- scale(new_micros_dim_j_properties)
-head(new_micros_dim_j_scaled)
+#head(new_micros_dim_j_scaled)
 
 # Preparing the data for UMAP, selecting only the columns with the physical property values
 umap_data_new_micros_dim_j_scaled <- new_micros_dim_j_scaled[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")]
 
 # Performing t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_dimj_scaled <- Rtsne(dist(umap_data_new_micros_dim_j_scaled), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -419,7 +426,7 @@ columns_to_add_new_micros_dim_j_scaled <- new_micros_dim_j[, 1:3]
 
 # Adding selected columns to combined_disport_control6_5PP_J_scaled
 new_micros_dim_j_scaled <- cbind(columns_to_add_new_micros_dim_j_scaled,new_micros_dim_j_scaled)
-head(new_micros_dim_j_scaled)
+#head(new_micros_dim_j_scaled)
 
 # Custom colors 
 my_colors_new_micros_dim_j1 <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
@@ -439,7 +446,7 @@ create_violin_plot_new_micros_dim_j <- function(property_name, y_limits = NULL) 
           legend.position = "none") +
     labs(x = "Protein_Type", y = "Normalized physico-chemical property score", title = property_name)
 
-  # Adjust y-axis limits if provided
+  
   if (!is.null(y_limits)) {
     p <- p + ylim(y_limits)
   }
@@ -517,7 +524,7 @@ control2_8PP_t <- rbind(normalized_human_uprot_weismann_8physpropsids_5000,norma
 control2_8PP_tt <- rbind(control2_8PP_t,normalized_human_globprot_scopeastral40_8physpropsids_longerthan100)
 control2_8PP_ttt <- rbind(control2_8PP_tt,normalized_human_peptideSeq_NCBI_new_8pp_smallerORequal75)
 dim(control2_8PP_ttt) # 9527 x 11
-head(control2_8PP_ttt)
+#head(control2_8PP_ttt)
 control2_5PP_J_tttt <- control2_8PP_ttt[c(1:8)]
 head(control2_5PP_J_tttt)
 
@@ -525,7 +532,7 @@ head(control2_5PP_J_tttt)
 combined_disport_control2_5PP_J <- rbind(control2_5PP_J_tttt,normalized_human_disprot_Disprot_dim_j_longerthan100)
 dim(combined_disport_control2_5PP_J) # 10596 x 8
 head(combined_disport_control2_5PP_J)
-View(combined_disport_control2_5PP_J)
+#View(combined_disport_control2_5PP_J)
 sum(is.na(combined_disport_control2_5PP_J))
 combined_disport_control2_5PP_J <- na.omit(combined_disport_control2_5PP_J)
 
@@ -593,7 +600,6 @@ print(plotPeptide_combined_disport_control2_5PP_J)
 ```
 
 ```{r}
-
 # Filtering data for each protein type to make plot for length distribution
 micro_proteins_combined_disport_control2_5PP_J <- combined_disport_control2_5PP_J %>% filter(type == 'Microprotein')
 disprot_combined_disport_control2_5PP_J <- combined_disport_control2_5PP_J %>% filter(type == 'Disordered protein')
@@ -624,22 +630,29 @@ plot_length_distribution <- function(protein_data, protein_type) {
 plotMicro_combined_disport_control2_5PP_J <- plot_length_distribution(micro_proteins_combined_disport_control2_5PP_J, 'Microproteins')
 print(plotMicro_combined_disport_control2_5PP_J)
 
+```
+```{r}
 # Plotting length distribution for disordered proteins
 plotDisprot_combined_disport_control2_5PP_J <- plot_length_distribution(disprot_combined_disport_control2_5PP_J, 'Disordered Proteins')
 print(plotDisprot_combined_disport_control2_5PP_J)
+```
 
+```{r}
 # Plotting length distribution for globular proteins
 plotGlobprot_combined_disport_control2_5PP_J <- plot_length_distribution(globular_combined_disport_control2_5PP_J, 'Globular Proteins')
 print(plotGlobprot_combined_disport_control2_5PP_J)
+```
 
+```{r}
 # Plotting length distribution for membrane proteins
 plotMembprot_combined_disport_control2_5PP_J <- plot_length_distribution(membrane_combined_disport_control2_5PP_J, 'Membrane Proteins')
 print(plotMembprot_combined_disport_control2_5PP_J)
+```
 
+```{r}
 # Plotting length distribution for peptides
 plotPeptide_combined_disport_control2_5PP_J <- plot_length_distribution(peptides_combined_disport_control2_5PP_J, 'Peptides')
 print(plotPeptide_combined_disport_control2_5PP_J)
-
 ```
 
 # Script for reading and length normalizing data for different human protrein types : microproteins (chen et al. paper),  globular protein (SCOPe), membrane protein (mpstruc database) , human IDPs (DisProt) and human peptides (NCBI) and physiochemcial properties of randomly selected IDs :CIDH920105	CHOP780101 KLEP840101 CHAM830105 ONEK900101) followed by UMAP, t-SNE. All the canonical proteins are above 100 aa and peptide <= 75.
@@ -647,7 +660,7 @@ print(plotPeptide_combined_disport_control2_5PP_J)
 # The disordered proteins are taken from DisProt database (Human, non-ambiguous, non-obsolete).
 New_disprot_SIDs <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/human_disprot_DisprotDB_5PP_SIDs.txt', header = TRUE, fill = TRUE, sep = "\t")
 head(New_disprot_SIDs)
-View(New_disprot_SIDs)
+#View(New_disprot_SIDs)
 
 # Removing last column
 New_disprot_SIDs$V8 <- NULL
@@ -692,7 +705,9 @@ selected_data <- New_disprot_SIDs[, ..selected_columns]
 
 # Writing 'selected_data' to a text file as follows:
 write.table(selected_data, "normalized_IDPs_Disprot_SIDs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
+```
 
+```{r}
 normalized_human_IDPs_Disprot_SIDs <- fread("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/normalized_human_IDPs_Disprot_SIDs.txt", header = TRUE, fill = TRUE, sep = "\t")
 dim(normalized_human_IDPs_Disprot_SIDs) # 4587 x  8
 
@@ -702,6 +717,7 @@ dim(normalized_human_IDPs_Disprot_SIDs_longerthan100) # 1069 x 8
 #View(normalized_human_IDPs_Disprot_SIDs_longerthan100)
 ```
 
+
 ```{r}
 head(control2_8PP_ttt)
 control2_5PP_SIDs_tttt <- control2_8PP_ttt[c(1:5,8,9,11)]
@@ -710,7 +726,7 @@ head(control2_5PP_SIDs_tttt)
 # Adding IDP data from disprot
 combined_Disport_control2_5PP_SIDs <- rbind(control2_5PP_SIDs_tttt,normalized_human_IDPs_Disprot_SIDs_longerthan100)
 dim(combined_Disport_control2_5PP_SIDs) # 10596 x 8
-View(combined_Disport_control2_5PP_SIDs)
+#View(combined_Disport_control2_5PP_SIDs)
 
 # Correcting the script to update 'type' column with new names
 combined_Disport_control2_5PP_SIDs <- combined_Disport_control2_5PP_SIDs %>%
@@ -723,19 +739,20 @@ combined_Disport_control2_5PP_SIDs <- combined_Disport_control2_5PP_SIDs %>%
     TRUE ~ type  # Preserves original type if none of the conditions above are met
   ))
 
+head(combined_Disport_control2_5PP_SIDs)
 ```
 
 ```{r}
 # Preparing the data for UMAP, selecting only the columns with the physical property values
 umap_data_combined_Disport_control2_5PP_SIDs <- combined_Disport_control2_5PP_SIDs[, c("CIDH920105_norm", "CHOP780101_norm", "KLEP840101_norm", "CHAM830105_norm","ONEK900101_norm")]
-head(umap_data_combined_Disport_control2_5PP_SIDs)
+#head(umap_data_combined_Disport_control2_5PP_SIDs)
 # Running UMAP
-set.seed(48) # Set a random seed for reproducibility
+set.seed(48) 
 umap_result_combined_Disport_control2_5PP_SIDs <- umap(umap_data_combined_Disport_control2_5PP_SIDs,n_neighbors=15, min_dist=0.3)
 
 # Creating a data frame for plotting that includes the UMAP dimensions and the protein type
 plot_data_combined_Disport_control2_5PP_SIDs <- data.frame(UMAP1 = umap_result_combined_Disport_control2_5PP_SIDs$layout[,1], UMAP2 = umap_result_combined_Disport_control2_5PP_SIDs$layout[,2], Type = combined_Disport_control2_5PP_SIDs$type)
-head(plot_data_combined_Disport_control2_5PP_SIDs)
+#head(plot_data_combined_Disport_control2_5PP_SIDs)
 
 my_colors_Disprot_SIDs <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
 
@@ -753,7 +770,7 @@ p1_combined_Disport_control2_5PP_SIDs
 
 ```{r}
 # Performing t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_Disport_control2_5PP_SIDs <- Rtsne(dist(umap_data_combined_Disport_control2_5PP_SIDs), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -776,16 +793,16 @@ p3_combined_Disport_control2_5PP_SIDs
 ```{r}
 # t-SNE on scaled physical property scores of IDs: CIDH920105	CHOP780101 KLEP840101 CHAM830105 ONEK900101.
 combined_Disport_control2_5PP_SIDs_properties <- combined_Disport_control2_5PP_SIDs[, c(4:8)]
-head(combined_Disport_control2_5PP_SIDs_properties)
+#head(combined_Disport_control2_5PP_SIDs_properties)
 
 # Standardize the properties_combined_disport_control2_5PP_J
 combined_Disport_control2_5PP_SIDs_scaled <- scale(combined_Disport_control2_5PP_SIDs_properties)
-head(combined_Disport_control2_5PP_SIDs_scaled)
+#head(combined_Disport_control2_5PP_SIDs_scaled)
 
 umap_data_combined_Disport_control2_5PP_SIDs_scaled <- combined_Disport_control2_5PP_SIDs_scaled[, c("CIDH920105_norm", "CHOP780101_norm", "KLEP840101_norm", "CHAM830105_norm","ONEK900101_norm")]
-head(umap_data_combined_Disport_control2_5PP_SIDs_scaled)
+#head(umap_data_combined_Disport_control2_5PP_SIDs_scaled)
 
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_Disport_control2_5PP_SIDs_scaled <- Rtsne(dist(umap_data_combined_Disport_control2_5PP_SIDs_scaled), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Create a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -883,7 +900,7 @@ combined_disport_control6_5PP_J <- combined_disport_control6_5PP_J %>%
 umap_data_combined_disport_control6_5PP_J <- combined_disport_control6_5PP_J[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")]
 head(umap_data_combined_disport_control6_5PP_J)
 # Running UMAP
-set.seed(48) # Set a random seed for reproducibility
+set.seed(48) 
 umap_result_combined_disport_control6_5PP_J <- umap(umap_data_combined_disport_control6_5PP_J,n_neighbors=15, min_dist=0.3)
 
 # Creating a data frame for plotting that includes the UMAP dimensions and the protein type
@@ -906,7 +923,7 @@ p1_combined_disport_control6_5PP_J
 
 ```{r}
 # Performing t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_disport_control6_5PP_J <- Rtsne(dist(umap_data_combined_disport_control6_5PP_J), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -940,7 +957,7 @@ head(combined_disport_control6_5PP_J_scaled)
 umap_data_combined_disport_control6_5PP_J_scaled <- combined_disport_control6_5PP_J_scaled[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")]
 
 # Perform t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_disport_control6_5PP_J_scaled <- Rtsne(dist(umap_data_combined_disport_control6_5PP_J_scaled), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Create a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -963,9 +980,54 @@ p3_combined_disport_control6_5PP_J_scaled
 ```
 
 ```{r}
+# Perform t-SNE with perplexity parameter 5
+set.seed(42) 
+tsne_result_combined_disport_control6_5PP_J_scaled_Per5 <- Rtsne(dist(umap_data_combined_disport_control6_5PP_J_scaled), dims = 2, perplexity = 5, theta = 0.0, max_iter= 1000, verbose = FALSE )
+
+# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+tsne_data_combined_disport_control6_5PP_J_scaled_Per5 <- data.frame(TSNE1 = tsne_result_combined_disport_control6_5PP_J_scaled_Per5$Y[,1], TSNE2 = tsne_result_combined_disport_control6_5PP_J_scaled_Per5$Y[,2], Type = combined_disport_control6_5PP_J$type)
+
+my_colors_combined_disport_control6_5PP_J <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
+
+# Plot using ggplot2
+p3_combined_disport_control6_5PP_J_scaled_Per5 <- ggplot(tsne_data_combined_disport_control6_5PP_J_scaled_Per5, aes(x = TSNE1, y = TSNE2, color = Type)) +
+  geom_point(size=0.65, alpha=0.75) +
+  scale_color_manual(values = my_colors_combined_disport_control6_5PP_J) + # Use the custom colors
+  labs(title = "t-SNE Visualization of Protein Clusters_Weismann_Disprot_Scope_mpStruc_NCBI(< 75aa)_DB(5PP_JIDs)_scaled_Per5",
+       x = "t-SNE Dimension 1",
+       y = "t-SNE Dimension 2",
+       color = "Protein Type") +
+  theme_minimal()
+
+p3_combined_disport_control6_5PP_J_scaled_Per5
+```
+
+```{r}
+# Perform t-SNE with perplexity parameter 50
+set.seed(42) 
+tsne_result_combined_disport_control6_5PP_J_scaled_Per50 <- Rtsne(dist(umap_data_combined_disport_control6_5PP_J_scaled), dims = 2, perplexity = 50, theta = 0.0, max_iter= 1000, verbose = FALSE )
+
+# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+tsne_data_combined_disport_control6_5PP_J_scaled_Per50 <- data.frame(TSNE1 = tsne_result_combined_disport_control6_5PP_J_scaled_Per50$Y[,1], TSNE2 = tsne_result_combined_disport_control6_5PP_J_scaled_Per50$Y[,2], Type = combined_disport_control6_5PP_J$type)
+
+my_colors_combined_disport_control6_5PP_J <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
+
+# Plot using ggplot2
+p3_combined_disport_control6_5PP_J_scaled_Per50 <- ggplot(tsne_data_combined_disport_control6_5PP_J_scaled_Per50, aes(x = TSNE1, y = TSNE2, color = Type)) +
+  geom_point(size=0.65, alpha=0.75) +
+  scale_color_manual(values = my_colors_combined_disport_control6_5PP_J) + # Use the custom colors
+  labs(title = "t-SNE Visualization of Protein Clusters_Weismann_Disprot_Scope_mpStruc_NCBI(< 75aa)_DB(5PP_JIDs)_scaled_Per50",
+       x = "t-SNE Dimension 1",
+       y = "t-SNE Dimension 2",
+       color = "Protein Type") +
+  theme_minimal()
+
+p3_combined_disport_control6_5PP_J_scaled_Per50
+```
+
+```{r}
 # Making violin plots to check the distribution of the physico-chemical property scores on the above dataset (microproteins (chen et al. paper), human Globular (SCOPe) and membrane protein (mpstruc), human IDPs (DisProt) and human peptides (NCBI)) 
 
-# Custom colors as you've defined
 my_colors_new_micros_dim_j <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
 
 # Selecting the first 3 columns of combined_disport_control6_5PP_J
@@ -991,7 +1053,7 @@ create_violin_plot_combined_disport_control6_5PP_J_scaled <- function(property_n
           legend.position = "none") +
     labs(x = "Protein_Type", y = "Normalized_Physicochemical_property_Score", title = property_name)
 
-  # Adjusting y-axis limits 
+ 
   if (!is.null(y_limits)) {
     p <- p + ylim(y_limits)
   }
@@ -1031,9 +1093,9 @@ Human_uprot_JMudge_8pp<- read.table("/Users/namrataxxx/Desktop/Master_Thesis_mat
 head(Human_uprot_JMudge_8pp)
 # Removing last column
 Human_uprot_JMudge_8pp$X <- NULL
-# Add a new column named "type" with all values as "micro"
+# Adding a new column named "type" with all values as "microprotein"
 Human_uprot_JMudge_8pp$type <- "microprotein"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_uprot_JMudge_8pp <- Human_uprot_JMudge_8pp[c(1, ncol(Human_uprot_JMudge_8pp), 2:(ncol(Human_uprot_JMudge_8pp)-1))]
 #View(Human_uprot_JMudge_8pp)
 dim(Human_uprot_JMudge_8pp) # 3085 x  11
@@ -1059,7 +1121,7 @@ write.table(selected_data, 'normalized_human_uprot_JMudge_8physpropsids.txt', ro
 # Reading normalized data and prepapring for UMAP analysis
 normalized_human_uprot_Jmudge_8physpropsids <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/8physpropIDs_dataset/normalized_human_uprot_JMudge_8physpropsids.txt", header=TRUE, sep="\t")
 dim(normalized_human_uprot_Jmudge_8physpropsids) # 3085  x  11
-View(normalized_human_uprot_Jmudge_8physpropsids)
+#View(normalized_human_uprot_Jmudge_8physpropsids)
 
 control_JM_8PP_t <- rbind(normalized_human_uprot_Jmudge_8physpropsids,normalized_human_membprot_mpstruc_8physpropsids_longerthan100)
 control_JM_8PP_tt <- rbind(control_JM_8PP_t,normalized_human_globprot_scopeastral40_8physpropsids_longerthan100)
@@ -1079,6 +1141,7 @@ combined_control_JM_5PP_J_tttt <- na.omit(combined_control_JM_5PP_J_tttt)
 # Correcting the script to update 'type' column with new names
 combined_control_JM_5PP_J_tttt <- combined_control_JM_5PP_J_tttt %>%
   mutate(type = case_when(
+    type == "disprot" ~ "Disordered protein",
     type == "microprotein" ~ "Microprotein",
     type == "globular_prot_scope" ~ "Globular protein",
     type == "membrane_prot" ~ "Membrane protein",
@@ -1100,7 +1163,7 @@ head(combined_control_JM_5PP_J_tttt_scaled)
 umap_data_combined_control_JM_5PP_J_tttt_scaled <- combined_control_JM_5PP_J_tttt_scaled[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")]
 
 # Performing t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_control_JM_5PP_J_tttt_scaled <- Rtsne(dist(umap_data_combined_control_JM_5PP_J_tttt_scaled), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -1194,13 +1257,13 @@ dim(New_Disprot_control8) # 4587 x  11
 # Filtering for disordered proteins larger than 100 amino acids
 normalized_human_disprot_Disprot_control8_longerthan100 <-  New_Disprot_control8 %>% filter(length > 100)
 dim(normalized_human_disprot_Disprot_control8_longerthan100) # 1069 x 11
-View(normalized_human_disprot_Disprot_control8_longerthan100) 
+#View(normalized_human_disprot_Disprot_control8_longerthan100) 
 
 # Adding IDP data from disprot
 combined_disport_control8_8PP_J <- rbind(control8_8PP_ttt,normalized_human_disprot_Disprot_control8_longerthan100)
 dim(combined_disport_control8_8PP_J) # 10596 x 11
 head(combined_disport_control8_8PP_J)
-View(combined_disport_control8_8PP_J)
+#View(combined_disport_control8_8PP_J)
 sum(is.na(combined_disport_control8_8PP_J))
 combined_disport_control8_8PP_J <- na.omit(combined_disport_control8_8PP_J)
 
@@ -1222,7 +1285,7 @@ combined_disport_control8_8PP_J <- combined_disport_control8_8PP_J %>%
 umap_data_combined_disport_control8_8PP_J <- combined_disport_control8_8PP_J[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm","CHAM830105_norm","KARP850103_norm","ONEK900101_norm")]
 
 # Performing t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_disport_control8_8PP_J <- Rtsne(dist(umap_data_combined_disport_control8_8PP_J), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -1257,7 +1320,7 @@ head(combined_disport_control8_8PP_J_scaled)
 umap_data_combined_disport_control8_8PP_J_scaled <- combined_disport_control8_8PP_J_scaled[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm","CHAM830105_norm","KARP850103_norm","ONEK900101_norm")]
 
 # Performing t-SNE
-set.seed(42) # Set a random seed for reproducibility
+set.seed(42) 
 tsne_result_combined_disport_control8_8PP_J_scaled <- Rtsne(dist(umap_data_combined_disport_control8_8PP_J_scaled), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
 # Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
@@ -1334,7 +1397,7 @@ for (property in properties) {
 
 # Visualizations using histograms,box,QQ,density plots on sub-sampled dataset.
 ```{r}
-# Create a combined histogram plot for each property
+# Creating a combined histogram plot for each property
 for (property in properties) {
   ggplot(subsampled_df, aes_string(x = property, fill = 'type')) + 
     geom_histogram(binwidth = 0.1, alpha = 0.6, position = 'identity') + # adjust binwidth as needed
@@ -1349,7 +1412,7 @@ for (property in properties) {
 ```
 
 ```{r}
-# Create Q-Q plots for each property
+# Creating Q-Q plots for each property
 for (property in properties) {
   ggplot(subsampled_df, aes_string(sample = property)) + 
     stat_qq() +
@@ -1361,12 +1424,12 @@ for (property in properties) {
   print(p)
 }
 
-# In the case of KLEP840101, the deviations from the line in the Q-Q plots suggest that the physicochemical properties for these protein types do not follow a normal distribution. This is particularly true for the tails of the distributions (both light and heavy tails) and is most pronounced in the "micro" and "peptide" protein types. If the points in the QQ plot fall approximately along a straight line, it suggests that the two distributions being compared are similar.
+# In the case of KLEP840101, the deviations from the line in the Q-Q plots suggest that the physicochemical property score for these protein types do not follow a normal distribution. This is particularly true for the tails of the distributions (both light and heavy tails) and is most pronounced in the "Microprotein" and "Peptide" protein types. If the points in the QQ plot fall approximately along a straight line, it suggests that the two distributions being compared are similar.
 #If the points deviate systematically from a straight line, it indicates that the distributions differ. Deviations towards the ends of the line indicate that one distribution is more spread out than the other.
 ```
 
 ```{r}
-# Create a density plot for each property
+# Creating a density plot for each property
 for (property in properties) {
   ggplot(subsampled_df, aes_string(x = property, fill = 'type')) + 
     geom_density(alpha = 0.6) +
@@ -1438,9 +1501,7 @@ set.seed(44)
 sampled_fasta <- sample(fasta_data, size = 500, replace = FALSE)
 
 # Writing the sampled sequences to a new FASTA file
-write.fasta(sequences = sampled_fasta, 
-            names = names(sampled_fasta), 
-            file.out = "/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Fasta_files/sample.fasta")
+#write.fasta(sequences = sampled_fasta,names = names(sampled_fasta), file.out = "/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Fasta_files/sample.fasta")
 
 sampled_sequences <- sapply(sampled_fasta, as.character)
 
@@ -1465,21 +1526,19 @@ ggplot(results, aes(x = Length)) +
 # Directly take the lengths of microproteins to create a matching length distribution for canonical proteins.
 micro_protein_lengths <- micro_proteins_control1$length # 'micro_proteins_control1' is a data frame with 'length' as one of its columns.
 
-# Read the fasta files
+# Reading the fasta files
 read_fasta <- function(file_path) {
   readAAStringSet(filepath = file_path, format = "fasta")
 }
 
 # Function to generate random snippets with matching lengths
 generate_matching_snippets <- function(protein_sequences, length_distribution) {
-  # Prepare a list to hold the snippets
   snippets <- vector("list", length(protein_sequences))
   
   for (i in seq_along(protein_sequences)) {
     seq <- protein_sequences[[i]]
     seq_length <- length(seq)
     
-    # Randomly choose a length from the microproteins length distribution
     target_length <- sample(length_distribution, 1)
     
     # If sequence is shorter than the target length, store it as is
@@ -1510,7 +1569,7 @@ write_fasta <- function(snippets, file_name) {
   writeXStringSet(snippets, filepath = file_name)
 }
 
-# Read the fasta files
+# Reading the fasta files
 globular_proteins <- read_fasta("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Fasta_files/human_globular_protein_scope_astral_40.fasta")
 membrane_proteins <- read_fasta("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Fasta_files/human_membprot_mpstrucDB.fasta")
 disordered_proteins <- read_fasta("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Fasta_files/DisProt release_2023_06.fasta")
@@ -1529,7 +1588,7 @@ write_fasta(disordered_snippets_correct, "human_IDPProt_Disprot_R_randomSnippets
 
 ```{r}
 # Reading the physiochemical properties dataset of random snippets generated in R from IDP proteins (Disprot database) for 5 PP JIds.
-# Read the data
+# Reading the data
 human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/5physpropsIDS_Joost_R_randomSnippets_dataset/human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct.txt', header = TRUE, fill = TRUE, sep = "\t")
 head(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
 #View(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct )
@@ -1537,13 +1596,13 @@ head(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
 # Removing last column
 human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct $V8 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct  <- human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct [, .(protein, length, CIDH920105,	CHOP780101,	CHOP780201,	CHOP780202,	KLEP840101)]
 View(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
 
-# Add a new column named "type" with all values as "Disordered_proteins"
+# Adding a new column named "type" with all values as "Disordered_proteins_randomSnippets_R"
 human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct$type <- "Disordered_proteins_randomSnippets_R"
-# To place the new column at the second position
+# Placing the new column at the second position
 human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct  <- human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct  %>%
   select(1, type, everything())
 head(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
@@ -1559,14 +1618,14 @@ tail(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
 View(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
 dim(human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct) # 4587 x 13
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- c("protein", "type", "length", "CIDH920105_norm", 
                     "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")
 
-# Select the specified columns
+# Selecting the specified columns
 selected_data <- human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct[, ..selected_columns]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 #write.table(selected_data, "normalized_human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
@@ -1581,13 +1640,13 @@ head(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
 # Removing last column
 human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct$V8 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct  <- human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct [, .(protein, length, CIDH920105,	CHOP780101,	CHOP780201, CHOP780202,KLEP840101)]
 #View(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
 
-# Add a new column named "type" with all values as "Membrane_proteins"
+# Adding a new column named "type" with all values as "Membrane_proteins_randomSnippets_R"
 human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct$type <- "Membrane_proteins_randomSnippets_R"
-# To place the new column at the second position
+# Placing the new column at the second position
 human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct  <- human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct  %>%
   select(1, type, everything())
 head(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
@@ -1595,7 +1654,7 @@ head(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
 # List of physicochemical property columns to normalize
 properties <- c("CIDH920105","CHOP780101","CHOP780201",	"CHOP780202",	"KLEP840101")
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct[[paste0(property, "_norm")]] <- human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct[[property]] / human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct$length
 }
@@ -1603,14 +1662,14 @@ tail(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
 #View(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
 dim(human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct) # 1719 x 13
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- c("protein", "type", "length", "CIDH920105_norm", 
                      "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")
 
-# Select the specified columns
+# Selecting the specified columns
 selected_data <- human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct[, ..selected_columns]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 #write.table(selected_data, "normalized_human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 ```
 
@@ -1623,13 +1682,13 @@ head(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct)
 # Removing last column
 human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct$V8 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct  <- human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct [, .(protein, length, CIDH920105,	CHOP780101,	CHOP780201, CHOP780202,KLEP840101)]
 #View(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct)
 
-# Add a new column named "type" with all values as "Membrane_proteins"
+# Adding a new column named "type" with all values as "Globular_proteins_randomSnippets_R"
 human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct$type <- "Globular_proteins_randomSnippets_R"
-# To place the new column at the second position
+# Placing the new column at the second position
 human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct  <- human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct  %>%
   select(1, type, everything())
 head(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct)
@@ -1637,7 +1696,7 @@ head(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct)
 # List of physicochemical property columns to normalize
 properties <- c("CIDH920105","CHOP780101","CHOP780201",	"CHOP780202",	"KLEP840101")
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct[[paste0(property, "_norm")]] <- human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct[[property]] / human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct$length
 }
@@ -1645,14 +1704,14 @@ tail(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct)
 #View(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct)
 dim(human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct) # 2778 x 13
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- c("protein", "type", "length", "CIDH920105_norm", 
                      "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")
 
-# Select the specified columns
+# Selecting the specified columns
 selected_data <- human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct[, ..selected_columns]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 #write.table(selected_data, "normalized_human_globProt_Scope40_R_randomSnippets_5PP_JIDs_correct.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 ```
 
@@ -1698,7 +1757,7 @@ dim(normalized_human_uprot_weismann_8physpropsids_5000) # 5000 x  11
 uprot_peptide_8PP <- rbind(normalized_human_uprot_weismann_8physpropsids_5000,normalized_human_peptideSeq_NCBI_new_8physphrosids_smallerORequal75)
 head(uprot_peptide_8PP)
 uprot_peptide_5PP_JID <- uprot_peptide_8PP[c(1:8)]
-dim(uprot_peptide_5PP_JID)
+dim(uprot_peptide_5PP_JID) # 6381 x 8
 random_snippet_r_t_5PP_JTD_correct <- rbind(uprot_peptide_5PP_JID, normalized_human_IDPProt_Disprot_R_randomSnippets_5PP_JIDs_correct)
 
 random_snippet_r_tt_5PP_JTD_correct <- rbind(random_snippet_r_t_5PP_JTD_correct,normalized_human_membProt_mpStruc_R_randomSnippets_5PP_JIDs_correct)
@@ -1726,18 +1785,18 @@ combined_random_snippet_R_5PP_JID_correct <- combined_random_snippet_R_5PP_JID_c
 umap_data_combined_random_snippet_R_5PP_JTD_correct <- combined_random_snippet_R_5PP_JID_correct[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")]
 head(umap_data_combined_random_snippet_R_5PP_JTD_correct)
 # Run UMAP
-set.seed(48) # Set a random seed for reproducibility
+set.seed(48)
 umap_result_combined_random_snippet_R_5PP_JTD_correct <- umap(umap_data_combined_random_snippet_R_5PP_JTD_correct,n_neighbors=15, min_dist=0.3)
 
-# Create a data frame for plotting that includes the UMAP dimensions and the protein type
+# Creating a data frame for plotting that includes the UMAP dimensions and the protein type
 plot_data_j_combined_random_snippet_R_5PP_JTD_correct <- data.frame(UMAP1 = umap_result_combined_random_snippet_R_5PP_JTD_correct$layout[,1], UMAP2 = umap_result_combined_random_snippet_R_5PP_JTD_correct$layout[,2], Type = combined_random_snippet_R_5PP_JID_correct$type)
-head(plot_data_j_combined_random_snippet_R_5PP_JTD_correct)
+#head(plot_data_j_combined_random_snippet_R_5PP_JTD_correct)
 
 
-# Define custom colors for the plot
+# Defining custom colors for the plot
 my_colors_combined_random_snippet_R_5PP_JTD_correct <- c("Disordered protein random snippets" = "#800080","Globular protein random snippets" = "#98FB98","Membrane protein random snippets" = "cyan","Microprotein" ="yellow", "Peptide" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 p1_combined_combined_random_snippet_R_5PP_JTD_correct <- ggplot(plot_data_j_combined_random_snippet_R_5PP_JTD_correct, aes(x = UMAP1, y = UMAP2, color = Type)) +
   geom_point(size=0.65, alpha=0.75) + # Adjust point transparency with the alpha parameter
     scale_color_manual(values = my_colors_combined_random_snippet_R_5PP_JTD_correct) + # Use the custom colors
@@ -1750,16 +1809,16 @@ p1_combined_combined_random_snippet_R_5PP_JTD_correct
 ```
 
 ```{r}
-# Perform t-SNE
-set.seed(42) # Set a random seed for reproducibility
+# Performing t-SNE
+set.seed(42) 
 tsne_result_combined_random_snippet_R_5PP_JTD_correct <- Rtsne(dist(umap_data_combined_random_snippet_R_5PP_JTD_correct), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
-# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+# Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
 tsne_data_combined_random_snippet_R_5PP_JTD_correct <- data.frame(TSNE1 = tsne_result_combined_random_snippet_R_5PP_JTD_correct$Y[,1], TSNE2 = tsne_result_combined_random_snippet_R_5PP_JTD_correct$Y[,2], Type = combined_random_snippet_R_5PP_JID_correct$type)
 
 my_colors_combined_random_snippet_R_5PP_JTD_correct <- c("Disordered protein random snippets" = "#800080","Globular protein random snippets" = "#98FB98","Membrane protein random snippets" = "cyan","Microprotein" ="yellow", "Peptide" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 p3_combined_combined_random_snippet_R_5PP_JTD_correct <- ggplot(tsne_data_combined_random_snippet_R_5PP_JTD_correct, aes(x = TSNE1, y = TSNE2, color = Type)) +
   geom_point(size=0.65, alpha=0.75) +
   scale_color_manual(values = my_colors_combined_random_snippet_R_5PP_JTD_correct) + # Use the custom colors
@@ -1776,24 +1835,24 @@ p3_combined_combined_random_snippet_R_5PP_JTD_correct
 combined_random_snippet_R_5PP_JID_correct_properties <- combined_random_snippet_R_5PP_JID_correct[, c(4:8)]
 head(combined_random_snippet_R_5PP_JID_correct_properties)
 
-# Standardize the properties_combined_disport_control2_5PP_J
+# Standardizing the properties_combined_disport_control2_5PP_J
 combined_random_snippet_R_5PP_JID_correct_scaled <- scale(combined_random_snippet_R_5PP_JID_correct_properties)
 head(combined_random_snippet_R_5PP_JID_correct_scaled)
 
 
 umap_data_combined_random_snippet_R_5PP_JID_correct_scaled <- combined_random_snippet_R_5PP_JID_correct_scaled[, c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")]
 
-# Perform t-SNE
-set.seed(42) # Set a random seed for reproducibility
+# Performing t-SNE
+set.seed(42) 
 tsne_result_combined_random_snippet_R_5PP_JTD_correct_scaled <- Rtsne(dist(umap_data_combined_random_snippet_R_5PP_JID_correct_scaled), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
-# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+# Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
 tsne_data_combined_random_snippet_R_5PP_JTD_correct_scaled <- data.frame(TSNE1 = tsne_result_combined_random_snippet_R_5PP_JTD_correct_scaled$Y[,1], TSNE2 = tsne_result_combined_random_snippet_R_5PP_JTD_correct_scaled$Y[,2], Type = combined_random_snippet_R_5PP_JID_correct$type)
 
 my_colors_combined_random_snippet_R_5PP_JTD_correct <- c("Disordered protein random snippets" = "#800080","Globular protein random snippets" = "#98FB98","Membrane protein random snippets" = "cyan","Microprotein" ="yellow", "Peptide" = "pink")
 
 
-# Plot using ggplot2
+# Plotting using ggplot2
 p3_combined_combined_random_snippet_R_5PP_JTD_correct_scaled <- ggplot(tsne_data_combined_random_snippet_R_5PP_JTD_correct_scaled, aes(x = TSNE1, y = TSNE2, color = Type)) +
   geom_point(size=0.65, alpha=0.75) +
   scale_color_manual(values = my_colors_combined_random_snippet_R_5PP_JTD_correct) + # Use the custom colors
@@ -1807,7 +1866,7 @@ p3_combined_combined_random_snippet_R_5PP_JTD_correct_scaled
 
 
 ```{r}
-# Filter data for each protein type to make plot for length distribution
+# Filtering data for each protein type to make plot for length distribution
 micro_proteins_randomSnippets_R_correct <- combined_random_snippet_R_5PP_JID_correct[combined_random_snippet_R_5PP_JID_correct$type == 'Microprotein', ]
 disprot_proteins_randomSnippets_R_correct <- combined_random_snippet_R_5PP_JID_correct[combined_random_snippet_R_5PP_JID_correct$type == 'Disordered protein random snippets', ]
 membrane_randomSnippets_R_correct <- combined_random_snippet_R_5PP_JID_correct[combined_random_snippet_R_5PP_JID_correct$type == 'Membrane protein random snippets', ]
@@ -1956,7 +2015,7 @@ my_colors_randSnippet_R_combined_complete <- c("Disordered protein random snippe
 df_long_combined_random_snippet_R_5PP_JTD_complete_correct_scaled <- combined_random_snippet_R_5PP_JID_complete_correct_scaled %>%
   pivot_longer(cols = c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm","KLEP840101_norm"),names_to = "property", values_to = "score")
 
-# Generate violin plots
+# Generating violin plots
 ggplot(df_long_combined_random_snippet_R_5PP_JTD_complete_correct_scaled, aes(x = type, y = score, fill = type)) +
   geom_violin(trim = FALSE) +
   scale_fill_manual(values = my_colors_randSnippet_R_combined_complete) +
@@ -1971,8 +2030,7 @@ ggplot(df_long_combined_random_snippet_R_5PP_JTD_complete_correct_scaled, aes(x 
 
 
 ```{r}
-
-# Define custom colors for the plot
+# custom colors for the plot
 my_colors_randSnippet_R_combined_complete <- c("Disordered protein random snippets" = "#800080",
                "Globular protein random snippets" = "#98FB98",
                "Membrane protein random snippets" = "cyan",
@@ -1982,7 +2040,7 @@ my_colors_randSnippet_R_combined_complete <- c("Disordered protein random snippe
                "Disordered protein" = "red",
                "Membrane protein" = "blue")
 
-# Reshape the dataframe to long format
+# Reshaping the dataframe to long format
 df_long_combined_random_snippet_R_5PP_JTD_complete_correct_scaled <- combined_random_snippet_R_5PP_JID_complete_correct_scaled %>%
   pivot_longer(cols = c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm","KLEP840101_norm"),names_to = "property", values_to = "score")
 
@@ -1997,7 +2055,7 @@ for (prop in properties) {
     labs(x = "Protein/Snippet Type", y = "Normalized physico-chemical property score", title = prop) +
     ylim(quantile(df_long_combined_random_snippet_R_5PP_JTD_complete_correct_scaled$score, probs = c(0.01, 0.99)))  # Adjust the limits of y-axis to avoid extreme outliers
   
-  print(p)  # This will print the plot to the RStudio Plots pane or your graphics device
+  print(p)  
 }
 ```
 
@@ -2013,7 +2071,7 @@ create_violin_plot_combined_random_snippet_R_5PP_JTD_complete_correct_scaled <- 
           legend.position = "none") +
     labs(x = "Protein/Random snippet Type", y = "Normalized physico-chemical property score", title = property_name)
 
-  # Adjust y-axis limits if provided
+
   if (!is.null(y_limits)) {
     p <- p + ylim(y_limits)
   }
@@ -2021,7 +2079,7 @@ create_violin_plot_combined_random_snippet_R_5PP_JTD_complete_correct_scaled <- 
   return(p)
 }
 
-# Generate plot for the CIDH920105_norm property with adjusted limits
+# Generating plot for the CIDH920105_norm property with adjusted limits
 p_CIDH920105_norm_combined_random_snippet_R_5PP_JTD_complete_correct_scaled <- create_violin_plot_combined_random_snippet_R_5PP_JTD_complete_correct_scaled("CIDH920105_norm", c(-1, 2))
 print(p_CIDH920105_norm_combined_random_snippet_R_5PP_JTD_complete_correct_scaled)
 
@@ -2052,7 +2110,7 @@ print(p_KLEP840101_norm_combined_random_snippet_R_5PP_JTD_complete_correct_scale
 combined_random_snippet_R_5PP_JID_correct_properties <- combined_random_snippet_R_5PP_JID_correct[, c(4:8)]
 head(combined_random_snippet_R_5PP_JID_correct_properties)
 
-# Standardize the properties_combined_disport_control2_5PP_J
+# Standardizing the properties_combined_disport_control2_5PP_J
 combined_random_snippet_R_5PP_JID_correct_scaled <- scale(combined_random_snippet_R_5PP_JID_correct_properties)
 head(combined_random_snippet_R_5PP_JID_correct_scaled)
 
@@ -2117,7 +2175,7 @@ for (property in properties) {
 # Visualizations using histograms,box,QQ,density plots on complete dataset.
 ```{r}
 
-# Create a combined histogram plot for each property
+# Creating a combined histogram plot for each property
 for (property in properties) {
   ggplot(subsampled_df_combined_random_snippet_R_5PP_JID_correct_scaled, aes_string(x = property, fill = 'type')) + 
     geom_histogram(binwidth = 0.1, alpha = 0.6, position = 'identity') + # adjust binwidth as needed
@@ -2132,7 +2190,7 @@ for (property in properties) {
 ```
 
 ```{r}
-# Create Q-Q plots for each property
+# Creating Q-Q plots for each property
 for (property in properties) {
   ggplot(subsampled_df_combined_random_snippet_R_5PP_JID_correct_scaled, aes_string(sample = property)) + 
     stat_qq() +
@@ -2144,12 +2202,12 @@ for (property in properties) {
   print(p)
 }
 
-# In the case of KLEP840101, the deviations from the line in the Q-Q plots suggest that the physicochemical properties for these protein types do not follow a normal distribution. This is particularly true for the tails of the distributions (both light and heavy tails) and is most pronounced in the "micro" and "peptide" protein types. If the points in the QQ plot fall approximately along a straight line, it suggests that the two distributions being compared are similar.
+# In the case of KLEP840101, the deviations from the line in the Q-Q plots suggest that the physicochemical property scores for these protein types and their random snippets do not follow a normal distribution. This is particularly true for the tails of the distributions (both light and heavy tails) and is most pronounced in the "micro" and "peptide" protein types. If the points in the QQ plot fall approximately along a straight line, it suggests that the two distributions being compared are similar.
 #If the points deviate systematically from a straight line, it indicates that the distributions differ. Deviations towards the ends of the line indicate that one distribution is more spread out than the other.
 ```
 
 ```{r}
-# Create a density plot for each property
+# Creating a density plot for each property
 for (property in properties) {
   ggplot(subsampled_df_combined_random_snippet_R_5PP_JID_correct_scaled, aes_string(x = property, fill = 'type')) + 
     geom_density(alpha = 0.6) +
@@ -2163,7 +2221,6 @@ for (property in properties) {
 
 # Conclusion: Overall, the plots suggest that the physicochemical property scores are not normally distributed. There are significant variations among the protein types, with some showing a sharp peak indicating that most proteins have similar physicochemical property scores, while others have a broader distribution.
 
-#The skewness and multiple peaks in some protein types suggest that the underlying biological processes may produce these properties in a non-uniform manner, or there could be subgroups within the types that have different characteristics. These observations suggest caution when applying statistical tests that assume normal distributions, and they also provide insight into the biological variability inherent in these protein types.
 ```
 
 
@@ -2177,7 +2234,7 @@ for (property in properties) {
   kruskal_results[[property]] <- kruskal_test
 }
 
-# Print Kruskal-Wallis results
+# Printing Kruskal-Wallis results
 for (property in properties) {
   cat("\nKruskal-Wallis test results for", property, ":\n")
   print(kruskal_results[[property]])
@@ -2192,7 +2249,7 @@ for (property in properties) {
   dunn_results[[property]] <- dunn_test
 }
 
-# Print Dunn's test results
+# Printing Dunn's test results
 for (property in properties) {
   cat("\nDunn's test results for", property, ":\n")
   print(dunn_results[[property]])
@@ -2203,7 +2260,6 @@ for (property in properties) {
 
 ```{r}
 # Reading the physiochemical properties dataset of random peptide snippets generated from disordered proteins (mobiDb database) for 8 PP Ids.
-# Read the data
 Human_Disprot_mobiDB_randExcel_snippets <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/8physpropIDs_dataset/human_disprot_randomExcel_snippets_mobiDB_8physpropsIDs.txt', header = TRUE, fill = TRUE, sep = "\t")
 head(Human_Disprot_mobiDB_randExcel_snippets)
 View(Human_Disprot_mobiDB_randExcel_snippets )
@@ -2211,13 +2267,13 @@ View(Human_Disprot_mobiDB_randExcel_snippets )
 # Removing last column
 Human_Disprot_mobiDB_randExcel_snippets $V11 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_Disprot_mobiDB_randExcel_snippets  <- Human_Disprot_mobiDB_randExcel_snippets [, .(protein, length, CIDH920105,	CHOP780101,	CHOP780201,	CHOP780202,	KLEP840101,CHAM830105,KARP850103,ONEK900101)]
 View(Human_Disprot_mobiDB_randExcel_snippets)
 
-# Add a new column named "type" with all values as "Disordered_proteins"
+# Adding a new column named "type" with all values as "Disordered_proteins_randomSnippets"
 Human_Disprot_mobiDB_randExcel_snippets$type <- "Disordered_proteins_randomSnippets"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_Disprot_mobiDB_randExcel_snippets  <- Human_Disprot_mobiDB_randExcel_snippets  %>%
   select(1, type, everything())
 #head(Human_Disprot_mobiDB_randExcel_snippets)
@@ -2225,7 +2281,7 @@ Human_Disprot_mobiDB_randExcel_snippets  <- Human_Disprot_mobiDB_randExcel_snipp
 # List of physicochemical property columns to normalize
 properties <- c("CIDH920105","CHOP780101","CHOP780201",	"CHOP780202",	"KLEP840101", "CHAM830105","KARP850103","ONEK900101")
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_Disprot_mobiDB_randExcel_snippets[[paste0(property, "_norm")]] <- Human_Disprot_mobiDB_randExcel_snippets[[property]] / Human_Disprot_mobiDB_randExcel_snippets$length
 }
@@ -2233,14 +2289,14 @@ tail(Human_Disprot_mobiDB_randExcel_snippets)
 View(Human_Disprot_mobiDB_randExcel_snippets)
 dim(Human_Disprot_mobiDB_randExcel_snippets) # 76716 x 19
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- c("protein", "type", "length", "CIDH920105_norm", 
                     "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm","CHAM830105_norm","KARP850103_norm","ONEK900101_norm")
 
-# Select the specified columns
+# Selecting the specified columns
 selected_data <- Human_Disprot_mobiDB_randExcel_snippets[, ..selected_columns]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 #write.table(selected_data, "normalized_human_disprot_randomExcel_snippets_mobiDB_8physpropsIDs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
@@ -2255,13 +2311,13 @@ Human_membprot_mobiDB_randExcel_snippets <- fread('/Users/namrataxxx/Desktop/Mas
 # Removing last column
 Human_membprot_mobiDB_randExcel_snippets$V11 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_membprot_mobiDB_randExcel_snippets  <- Human_membprot_mobiDB_randExcel_snippets [, .(protein, length, CIDH920105,	CHOP780101,	CHOP780201,	CHOP780202,	KLEP840101,CHAM830105,KARP850103,ONEK900101)]
 #View(Human_membprot_mobiDB_randExcel_snippets)
 
-# Add a new column named "type" with all values as "Membrane_proteins"
+# Adding a new column named "type" with all values as "Membrane_proteins_randomSnippets"
 Human_membprot_mobiDB_randExcel_snippets$type <- "Membrane_proteins_randomSnippets"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_membprot_mobiDB_randExcel_snippets  <- Human_membprot_mobiDB_randExcel_snippets  %>%
   select(1, type, everything())
 #head(Human_membprot_mobiDB_randExcel_snippets)
@@ -2269,7 +2325,7 @@ Human_membprot_mobiDB_randExcel_snippets  <- Human_membprot_mobiDB_randExcel_sni
 # List of physicochemical property columns to normalize
 properties <- c("CIDH920105","CHOP780101","CHOP780201",	"CHOP780202",	"KLEP840101", "CHAM830105","KARP850103","ONEK900101")
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_membprot_mobiDB_randExcel_snippets[[paste0(property, "_norm")]] <- Human_membprot_mobiDB_randExcel_snippets[[property]] / Human_membprot_mobiDB_randExcel_snippets$length
 }
@@ -2277,14 +2333,14 @@ tail(Human_membprot_mobiDB_randExcel_snippets)
 #View(Human_membprot_mobiDB_randExcel_snippets)
 dim(Human_membprot_mobiDB_randExcel_snippets) # 1717 x 19
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- c("protein", "type", "length", "CIDH920105_norm", 
                      "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm","CHAM830105_norm","KARP850103_norm","ONEK900101_norm")
 
-# Select the specified columns
+# Selecting the specified columns
 selected_data <- Human_membprot_mobiDB_randExcel_snippets[, ..selected_columns]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Write 'selected_data' to a text file as follows:
 #write.table(selected_data, "normalized_human_membprot_randomExcel_snippets_mpStruc_8physpropsIDs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 ```
 
@@ -2297,13 +2353,13 @@ Human_globprot_ScopeAstral40_randExcel_snippets <- fread('/Users/namrataxxx/Desk
 # Removing last column
 Human_globprot_ScopeAstral40_randExcel_snippets$V11 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_globprot_ScopeAstral40_randExcel_snippets  <- Human_globprot_ScopeAstral40_randExcel_snippets [, .(protein, length, CIDH920105,	CHOP780101,	CHOP780201,	CHOP780202,	KLEP840101,CHAM830105,KARP850103,ONEK900101)]
 #View(Human_globprot_ScopeAstral40_randExcel_snippets)
 
-# Add a new column named "type" with all values as "Globular_proteins"
+# Adding a new column named "type" with all values as "Globular_proteins_randomSnippets"
 Human_globprot_ScopeAstral40_randExcel_snippets$type <- "Globular_proteins_randomSnippets"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_globprot_ScopeAstral40_randExcel_snippets  <- Human_globprot_ScopeAstral40_randExcel_snippets  %>%
   select(1, type, everything())
 head(Human_globprot_ScopeAstral40_randExcel_snippets)
@@ -2311,7 +2367,7 @@ head(Human_globprot_ScopeAstral40_randExcel_snippets)
 # List of physicochemical property columns to normalize
 properties <- c("CIDH920105","CHOP780101","CHOP780201",	"CHOP780202",	"KLEP840101", "CHAM830105","KARP850103","ONEK900101")
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_globprot_ScopeAstral40_randExcel_snippets[[paste0(property, "_norm")]] <- Human_globprot_ScopeAstral40_randExcel_snippets[[property]] / Human_globprot_ScopeAstral40_randExcel_snippets$length
 }
@@ -2319,14 +2375,14 @@ tail(Human_globprot_ScopeAstral40_randExcel_snippets)
 #View(Human_globprot_ScopeAstral40_randExcel_snippets)
 dim(Human_globprot_ScopeAstral40_randExcel_snippets) # 2777 x 19
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- c("protein", "type", "length", "CIDH920105_norm", 
                      "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm","CHAM830105_norm","KARP850103_norm","ONEK900101_norm")
 
-# Select the specified columns
+# Selecting the specified columns
 selected_data <- Human_globprot_ScopeAstral40_randExcel_snippets[, ..selected_columns]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 #write.table(selected_data, "normalized_human_globprot_randomExcel_snippets_ScopeAstral40_8physpropsIDs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 ```
 
@@ -2392,17 +2448,16 @@ combined_protein_dataset_8_Peptide_NCBI_new_control1 <- combined_protein_dataset
 # Prepare the data for UMAP, selecting only the columns with the physical property values
 umap_data_8pp_Peptide_NCBI_new_control1 <- combined_protein_dataset_8_Peptide_NCBI_new_control1[, c("CIDH920105_norm","CHOP780101_norm","CHOP780201_norm","CHOP780202_norm","KLEP840101_norm")]
 head(umap_data_8pp_Peptide_NCBI_new_control1)
-# Run UMAP
-set.seed(7) # Set a random seed for reproducibility
+# Running UMAP
+set.seed(7) 
 umap_result_8pp_Peptide_NCBI_new_control1 <- umap(umap_data_8pp_Peptide_NCBI_new_control1)
 
-# Create a data frame for plotting that includes the UMAP dimensions and the protein type
+# Creating a data frame for plotting that includes the UMAP dimensions and the protein type
 plot_data_8pp_Peptide_NCBI_new_control1 <- data.frame(UMAP1 = umap_result_8pp_Peptide_NCBI_new_control1$layout[,1], UMAP2 = umap_result_8pp_Peptide_NCBI_new_control1$layout[,2], Type = combined_protein_dataset_8_Peptide_NCBI_new_control1$type)
-# Define custom colors for the plot
 
 my_colors <- c("Disordered protein random snippets_excel" = "#800080","Globular protein random snippets_excel" = "#98FB98","Membrane protein random snippets_excel" = "cyan","Microprotein" ="yellow","Peptide" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 p8_pp_Peptide_NCBI_new_control1 <- ggplot(plot_data_8pp_Peptide_NCBI_new_control1, aes(x = UMAP1, y = UMAP2, color = Type)) +
   geom_point(size=0.75, alpha=0.75) + # Adjust point transparency with the alpha parameter
   scale_color_manual(values = my_colors) + # Use the custom colors
@@ -2416,17 +2471,17 @@ p8_pp_Peptide_NCBI_new_control1
 
 
 ```{r}
-# Perform t-SNE
-set.seed(49) # Set a random seed for reproducibility
+# Performing t-SNE
+set.seed(49) 
 tsne_result_8_with_peptide_NCBI_new_control1 <- Rtsne(dist(umap_data_8pp_Peptide_NCBI_new_control1), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
-# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+# Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
 tsne_data_8_with_peptide_NCBI_new_control1 <- data.frame(TSNE1 = tsne_result_8_with_peptide_NCBI_new_control1$Y[,1], TSNE2 = tsne_result_8_with_peptide_NCBI_new_control1$Y[,2], Type = combined_protein_dataset_8_Peptide_NCBI_new_control1$type)
 
-# Define custom colors for the plot
+# Defining custom colors for the plot
 my_colors <- c("Disordered protein random snippets_excel" = "#800080","Globular protein random snippets_excel" = "#98FB98","Membrane protein random snippets_excel" = "cyan","Microprotein" ="yellow","Peptide" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 p8_pp_tSNE_peptide_NCBI_new_control1 <- ggplot(tsne_data_8_with_peptide_NCBI_new_control1, aes(x = TSNE1, y = TSNE2, color = Type)) +
    geom_point(size=0.75, alpha=0.75) + # Adjust point transparency with the alpha parameter
   scale_color_manual(values = my_colors) + # Use the custom colors
@@ -2439,7 +2494,7 @@ p8_pp_tSNE_peptide_NCBI_new_control1
 ```
 
 ```{r}
-# Filter data for each protein type to make plot for length distribution
+# Filtering data for each protein type to make plot for length distribution
 micro_proteins_control1 <- combined_protein_dataset_8_Peptide_NCBI_new_control1[combined_protein_dataset_8_Peptide_NCBI_new_control1$type == 'Microprotein', ]
 disprot_proteins_control1 <- combined_protein_dataset_8_Peptide_NCBI_new_control1[combined_protein_dataset_8_Peptide_NCBI_new_control1$type == 'Disordered protein random snippets_excel', ]
 membrane_proteins_control1 <- combined_protein_dataset_8_Peptide_NCBI_new_control1[combined_protein_dataset_8_Peptide_NCBI_new_control1$type == 'Membrane protein random snippets_excel', ]
@@ -2502,13 +2557,13 @@ dim(Human_uprot_weismann_AllPPs) # 10694 x 548
 # Removing last column
 Human_uprot_weismann_AllPPs$V548 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_uprot_weismann_AllPPs <- Human_uprot_weismann_AllPPs[, c(1, 2, 3:547)]
 #View(Human_uprot_weismann_AllPPs)
 
-# Add a new column named "type" with all values as "disprot"
+# Adding a new column named "type" with all values as "Microprotein"
 Human_uprot_weismann_AllPPs$type <- "Microprotein"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_uprot_weismann_AllPPs <- Human_uprot_weismann_AllPPs %>%
   select(1, type, everything())
 head(Human_uprot_weismann_AllPPs)
@@ -2517,24 +2572,24 @@ dim(Human_uprot_weismann_AllPPs)
 # List of physicochemical property columns to normalize
 properties <- colnames(Human_uprot_weismann_AllPPs)[4:548]
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_uprot_weismann_AllPPs[[paste0(property, "_norm")]] <- Human_uprot_weismann_AllPPs[[property]] / Human_uprot_weismann_AllPPs$length
 }
 View(Human_uprot_weismann_AllPPs)
 dim(Human_uprot_weismann_AllPPs) # 69642 x 1093
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- Human_uprot_weismann_AllPPs[, c(1:3, 549:1093)]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 write.table(selected_columns, "normalized_Human_uprot_weismann_AllPPs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
 
 ```{r}
 # Human IDP dataset (Disprot) physical property score (545 IDs).
-# Read the data
+# Reading the data
 Human_IDP_Disprot_AllPPs <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/545physpropIDS/human_IDP_Disprot_545physpropIDs.txt', header = TRUE, fill = TRUE, sep = "\t")
 #head(Human_IDP_Disprot_AllPPs)
 View(Human_IDP_Disprot_AllPPs)
@@ -2543,13 +2598,13 @@ dim(Human_IDP_Disprot_AllPPs) # 4587 x 548
 # Removing last column
 Human_IDP_Disprot_AllPPs$V548 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_IDP_Disprot_AllPPs <- Human_IDP_Disprot_AllPPs[, c(1, 2, 3:547)]
 #View(Human_IDP_Disprot_AllPPs)
 
-# Add a new column named "type" with all values as "disprot"
+# Adding a new column named "type" with all values as "Disordered protein"
 Human_IDP_Disprot_AllPPs$type <- "Disordered protein"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_IDP_Disprot_AllPPs <- Human_IDP_Disprot_AllPPs %>%
   select(1, type, everything())
 #head(Human_IDP_Disprot_AllPPs)
@@ -2557,17 +2612,17 @@ Human_IDP_Disprot_AllPPs <- Human_IDP_Disprot_AllPPs %>%
 # List of physicochemical property columns to normalize
 properties <- colnames(Human_IDP_Disprot_AllPPs)[4:548]
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_IDP_Disprot_AllPPs[[paste0(property, "_norm")]] <- Human_IDP_Disprot_AllPPs[[property]] / Human_IDP_Disprot_AllPPs$length
 }
 #View(Human_IDP_Disprot_AllPPs)
 dim(Human_IDP_Disprot_AllPPs) # 4587 x 1093
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- Human_IDP_Disprot_AllPPs[, c(1:3, 549:1093)]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 write.table(selected_columns, "normalized_Human_IDP_Disprot_AllPPs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
@@ -2575,7 +2630,7 @@ write.table(selected_columns, "normalized_Human_IDP_Disprot_AllPPs.txt", sep = "
 
 ```{r}
 # Human membrane protein dataset (mpStruc) physical property score (545 IDs).
-# Read the data
+# Reading the data
 Human_membraneProt_mpStruc_AllPPs <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/545physpropIDS/human_membProt_mpStruc_545physpropIDs.txt', header = TRUE, fill = TRUE, sep = "\t")
 #head(Human_membraneProt_mpStruc_AllPPs)
 View(Human_membraneProt_mpStruc_AllPPs)
@@ -2584,13 +2639,13 @@ dim(Human_membraneProt_mpStruc_AllPPs) # 1705 x 548
 # Removing last column
 Human_membraneProt_mpStruc_AllPPs$V548 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_membraneProt_mpStruc_AllPPs <- Human_membraneProt_mpStruc_AllPPs[, c(1, 2, 3:547)]
 #View(Human_membraneProt_mpStruc_AllPPs)
 
-# Add a new column named "type" with all values as "disprot"
+# Adding a new column named "type" with all values as "Membrane protein"
 Human_membraneProt_mpStruc_AllPPs$type <- "Membrane protein"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_membraneProt_mpStruc_AllPPs <- Human_membraneProt_mpStruc_AllPPs %>%
   select(1, type, everything())
 head(Human_membraneProt_mpStruc_AllPPs)
@@ -2598,17 +2653,17 @@ head(Human_membraneProt_mpStruc_AllPPs)
 # List of physicochemical property columns to normalize
 properties <- colnames(Human_membraneProt_mpStruc_AllPPs)[4:548]
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_membraneProt_mpStruc_AllPPs[[paste0(property, "_norm")]] <- Human_membraneProt_mpStruc_AllPPs[[property]] / Human_membraneProt_mpStruc_AllPPs$length
 }
 #View(Human_membraneProt_mpStruc_AllPPs)
 dim(Human_membraneProt_mpStruc_AllPPs) # 1705 x 1093
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- Human_membraneProt_mpStruc_AllPPs[, c(1:3, 549:1093)]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 write.table(selected_columns, "normalized_Human_membraneProt_mpStruc_AllPPs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
@@ -2616,7 +2671,7 @@ write.table(selected_columns, "normalized_Human_membraneProt_mpStruc_AllPPs.txt"
 ```{r}
 # Human globular protein dataset (Scope 40) physical property score (545 IDs).
 
-# Read the data
+# Reading the data
 Human_globProt_Scope40_AllPPs <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/545physpropIDS/human_globProt_Scope40_545physpropIDs.txt', header = TRUE, fill = TRUE, sep = "\t")
 #head(Human_globProt_Scope40_AllPPs)
 View(Human_globProt_Scope40_AllPPs)
@@ -2625,11 +2680,11 @@ dim(Human_globProt_Scope40_AllPPs) # 2741 x 548
 # Removing last column
 Human_globProt_Scope40_AllPPs$V548 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_globProt_Scope40_AllPPs <- Human_globProt_Scope40_AllPPs[, c(1, 2, 3:547)]
 #View(Human_globProt_Scope40_AllPPs)
 
-# Add a new column named "type" with all values as "disprot"
+# Add a new column named "type" with all values as "Globular protein"
 Human_globProt_Scope40_AllPPs$type <- "Globular protein"
 # To place the new column at the second position
 Human_globProt_Scope40_AllPPs <- Human_globProt_Scope40_AllPPs %>%
@@ -2639,18 +2694,18 @@ Human_globProt_Scope40_AllPPs <- Human_globProt_Scope40_AllPPs %>%
 # List of physicochemical property columns to normalize
 properties <- colnames(Human_globProt_Scope40_AllPPs)[4:548]
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_globProt_Scope40_AllPPs[[paste0(property, "_norm")]] <- Human_globProt_Scope40_AllPPs[[property]] / Human_globProt_Scope40_AllPPs$length
 }
 #View(Human_globProt_Scope40_AllPPs)
 dim(Human_globProt_Scope40_AllPPs) # 2741 x 1093
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- Human_globProt_Scope40_AllPPs[, c(1:3, 549:1093)]
 
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 write.table(selected_columns, "normalized_Human_globProt_Scope40_AllPPs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
@@ -2658,7 +2713,7 @@ write.table(selected_columns, "normalized_Human_globProt_Scope40_AllPPs.txt", se
 ```{r}
 # Human peptide dataset (NCBI_new) physical property score (545 IDs).
 
-# Read the data
+# Reading the data
 Human_peptide_NCBI_new_AllPPs <- fread('/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/545physpropIDS/human_peptide_NCBI_new_545physpropIDs.txt', header = TRUE, fill = TRUE, sep = "\t")
 #head(Human_peptide_NCBI_new_AllPPs)
 View(Human_peptide_NCBI_new_AllPPs)
@@ -2667,13 +2722,13 @@ dim(Human_peptide_NCBI_new_AllPPs) # 2212 x 548
 # Removing last column
 Human_peptide_NCBI_new_AllPPs$V548 <- NULL
 
-# Select only the necessary columns
+# Selecting only the necessary columns
 Human_peptide_NCBI_new_AllPPs <- Human_peptide_NCBI_new_AllPPs[, c(1, 2, 3:547)]
 #View(Human_peptide_NCBI_new_AllPPs)
 
-# Add a new column named "type" with all values as "disprot"
+# Adding a new column named "type" with all values as "Peptide"
 Human_peptide_NCBI_new_AllPPs$type <- "Peptide"
-# To place the new column at the second position
+# Placing the new column at the second position
 Human_peptide_NCBI_new_AllPPs <- Human_peptide_NCBI_new_AllPPs %>%
   select(1, type, everything())
 head(Human_peptide_NCBI_new_AllPPs)
@@ -2681,17 +2736,17 @@ head(Human_peptide_NCBI_new_AllPPs)
 # List of physicochemical property columns to normalize
 properties <- colnames(Human_peptide_NCBI_new_AllPPs)[4:548]
 
-# Normalize each property by the length
+# Normalizing each property by the length
 for (property in properties) {
   Human_peptide_NCBI_new_AllPPs[[paste0(property, "_norm")]] <- Human_peptide_NCBI_new_AllPPs[[property]] / Human_peptide_NCBI_new_AllPPs$length
 }
 #View(Human_peptide_NCBI_new_AllPPs)
 dim(Human_peptide_NCBI_new_AllPPs) # 2212 x 1093
 
-# Specify the columns you want to keep
+# Specifying the columns you want to keep
 selected_columns <- Human_peptide_NCBI_new_AllPPs[, c(1:3, 549:1093)]
 
-# Now, if the 'selected_data' is your final data.table, you can write it to a text file as follows:
+# Writing 'selected_data' to a text file as follows:
 write.table(selected_columns, "normalized_Human_peptide_NCBI_new_AllPPs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 ```
@@ -2751,7 +2806,7 @@ head(control5_AllPP_ttt)
 combined_control5_AllPPs <- rbind(control5_AllPP_ttt,normalized_Human_IDP_Disprot_AllPPs_longerthan100)
 dim(combined_control5_AllPPs) # 10596 x 548
 head(combined_control5_AllPPs)
-View(combined_control5_AllPPs)
+#View(combined_control5_AllPPs)
 sum(is.na(combined_control5_AllPPs))
 combined_control5_AllPPs <- na.omit(combined_control5_AllPPs)
 ```
@@ -2759,151 +2814,89 @@ combined_control5_AllPPs <- na.omit(combined_control5_AllPPs)
 
 ```{r}
 # PCA analysis to find which PCs to select 
-# Select only the columns relevant for PCA
+# Selecting only the columns relevant for PCA
 properties_combined_control5_AllPPs <- combined_control5_AllPPs[, c(4:548)]
 head(properties_combined_control5_AllPPs)
 
-# Standardize the properties_combined_disport_control2_5PP_J
+# Standardizing the properties_combined_disport_control2_5PP_J
 properties_combined_control5_AllPPs_scaled <- scale(properties_combined_control5_AllPPs)
 head(properties_combined_control5_AllPPs_scaled)
 
-# Perform PCA
+# Performing PCA
 pca_result_combined_control5_AllPPs <- prcomp(properties_combined_control5_AllPPs_scaled, center = TRUE, scale. = TRUE)
 
-# Summarize the PCA result
+# Summarizing the PCA result
 summary_pca <- summary(pca_result_combined_control5_AllPPs)
 
-# Extract the proportion of variance explained
+# Extracting the proportion of variance explained
 explained_variance_summary <- summary_pca$importance[2, 1:6]
 
-# Print the proportion of variance explained by the first 6 PCs
+# Printing the proportion of variance explained by the first 6 PCs
 explained_variance_summary
 
-# Extract the cumulative proportion of variance explained
+# Extracting the cumulative proportion of variance explained
 cumulative_explained_variance_summary <- summary_pca$importance[3, 1:6]
 
-# Print the cumulative proportion of variance explained by the first 6 PCs
+# Printing the cumulative proportion of variance explained by the first 6 PCs
 cumulative_explained_variance_summary
 ```
-
 ```{r}
-# Calculate the variance explained by each principal component
+# Calculating the variance explained by each principal component
 var_explained <- pca_result_combined_control5_AllPPs$sdev^2
 var_explained <- var_explained / sum(var_explained)
 
-# Create a scree plot
-plot(var_explained, xlab = "Principal Component",
-     ylab = "Proportion of Variance Explained",
-     type = "b", pch = 19, frame = FALSE,
-     main = "Scree Plot")
-
-```
-```{r}
-# Calculate the variance explained by each principal component
-var_explained <- pca_result_combined_control5_AllPPs$sdev^2
-var_explained <- var_explained / sum(var_explained)
-
-# Create a scree plot
+# Creating a scree plot
 plot(var_explained, xlab = "Principal Component", 
      ylab = "Proportion of Variance Explained", 
      type = "b", pch = 19, frame = FALSE, 
      main = "Scree Plot")
 
-# Add a cumulative line
+# Adding a cumulative line
 cum_var <- cumsum(var_explained)
-# The error occurs here, to fix this, make sure that plot has been successfully created.
 lines(cum_var, col = "red", lty = 2)
 
-# Add a cutoff line at 0.01 (1%) to visualize the components explaining at least 1% of the variance
+# Adding a cutoff line at 0.01 (1%) to visualize the components explaining at least 1% of the variance
 abline(h = 0.01, col = "blue", lty = 3)
 
-# Annotate the cutoff line
+# Annotating the cutoff line
 legend("topright", legend = c("Cumulative", "1% Cutoff"), 
        col = c("red", "blue"), lty = c(2, 3), cex = 0.8)
 ```
 ```{r}
 # Zooming in near the cut off line
-# Create a scree plot with adjusted x-axis limits to zoom in on the first 50 PCs
+# Creating a scree plot with adjusted x-axis limits to zoom in on the first 50 PCs
 plot(var_explained[1:15], xlab = "Principal Component", 
      ylab = "Proportion of Variance Explained", 
      type = "b", pch = 19, frame = FALSE, 
      main = "Scree Plot - Zoomed In")
 
-# Add a cumulative line
+# Adding a cumulative line
 cum_var <- cumsum(var_explained)
 lines(cum_var[1:15], col = "red", lty = 2)
 
-# Add a cutoff line at 0.01 (1%) to visualize the components explaining at least 1% of the variance
+# Adding a cutoff line at 0.01 (1%) to visualize the components explaining at least 1% of the variance
 abline(h = 0.01, col = "blue", lty = 3)
 
-# Annotate the cutoff line
+# Annotating the cutoff line
 legend("topright", legend = c("Cumulative", "1% Cutoff"), 
        col = c("red", "blue"), lty = c(2, 3), cex = 0.8)
 ```
 
 ```{r}
-# Calculate loadings_combined_control5_AllPPs for the PCA result
-loadings_combined_control5_AllPPs <- pca_result_combined_control5_AllPPs$rotation
-
-# Loadings for PC1 and PC2
-pc1_loadings_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, "PC1"]
-pc2_loadings_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, "PC2"]
-pc3_loadings_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, "PC3"]
-pc4_loadings_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, "PC4"]
-pc5_loadings_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, "PC5"]
-pc5_loadings_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, "PC6"]
-
-# Print the loadings_combined_control5_AllPPs for PC1 and PC2
-print("Loadings for PC1:")
-print(pc1_loadings_combined_control5_AllPPs)
-print("Loadings for PC2:")
-print(pc2_loadings_combined_control5_AllPPs)
-print("Loadings for PC3:")
-print(pc3_loadings_combined_control5_AllPPs)
-
-# To view the loadings_combined_control5_AllPPs in a more readable format as a dataframe:
-loadings_df_combined_control5_AllPPs <- as.data.frame(loadings_combined_control5_AllPPs[, 1:6])
-print(loadings_df_combined_control5_AllPPs)
-loadings_df_combined_control5_AllPPs
-```
-
-```{r}
-# Convert the loadings to a long format dataframe for plotting
-loadings_long_combined_control5_AllPPs <- loadings_combined_control5_AllPPs[, 1:6] %>%
-  as.data.frame() %>%
-  rownames_to_column(var = "Property") %>%
-  pivot_longer(cols = -Property, names_to = "PC", values_to = "Loading")
-
-# Create the bar plot for PCA loadings_combined_control5_AllPPs
-ggplot(loadings_long_combined_control5_AllPPs, aes(x = Property, y = Loading, fill = PC)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-  theme_minimal() +
-  labs(x = "Property", y = "Loading", title = "PCA Loadings for PC1,PC2,PC3,PC4,PC5 and PC6") +
-  coord_flip() 
-
-
-# In PCA, both strong positive and strong negative loadings indicate that a property is important in defining the principal component.Large absolute values (either positive or negative) indicate variables that have a strong influence on the component. Loadings close to 0 suggest that the variable has little to no influence on the component.
-
-# Try to make a plot of top ten properties with highest contribution in the PCA loading.
-```
-
-```{r}
 # t-SNE on Principal components:
-
-# First, extract the first three principal components from the PCA results
+# Extracting the first six principal components from the PCA results
 pca_scores_combined_control5_AllPPs <- pca_result_combined_control5_AllPPs$x[, 1:6]
 head(pca_scores_combined_control5_AllPPs)
 
-# Perform t-SNE on the first three PCs
-set.seed(48) # Set a random seed for reproducibility
+# Performing t-SNE on the first six PCs
+set.seed(48) 
 tsne_result_pca_combined_control5_AllPPs <- Rtsne(dist(pca_scores_combined_control5_AllPPs), dims = 2, perplexity = 15, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
-# Assuming 'combined_disport_control2_5PP_J' includes a column 'type' for protein types
 tsne_data_pca_combined_control5_AllPPs <- data.frame(TSNE1 = tsne_result_pca_combined_control5_AllPPs$Y[,1], TSNE2 = tsne_result_pca_combined_control5_AllPPs$Y[,2], Type = combined_control5_AllPPs$type)
 
 my_colors_combined_control5_AllPPs <- c("Disordered protein" = "red", "Globular protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptide" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 p_tsne_pca_combined_control5_AllPPs <- ggplot(tsne_data_pca_combined_control5_AllPPs, aes(x = TSNE1, y = TSNE2, color = Type)) +
   geom_point(size=0.65, alpha=0.75) +
   scale_color_manual(values = my_colors_combined_control5_AllPPs) + # Use the custom colors
@@ -2913,7 +2906,7 @@ p_tsne_pca_combined_control5_AllPPs <- ggplot(tsne_data_pca_combined_control5_Al
        color = "Protein Type") +
   theme_minimal()
 
-# Print the plot
+# Printing the plot
 p_tsne_pca_combined_control5_AllPPs
 ```
 
@@ -2924,33 +2917,33 @@ p_tsne_pca_combined_control5_AllPPs
 # These datasets for microprot (Weismann paper) contains prediction scores for GRAVY, DeepTMHMM, IUPred2A
 # Microprotein dataset
 Human_uprot_weismann_TMHMM <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/TMHMM_Scores/human_uprot_Weismann_TMHMMScore_final.txt", header=TRUE, sep="\t")
-View(Human_uprot_weismann_TMHMM)
+#View(Human_uprot_weismann_TMHMM)
 dim(Human_uprot_weismann_TMHMM) # 9768 x 3
 
-# Read the first table with GRAVY scores
+# Reading the first table with GRAVY scores
 Human_uprot_weismann_GRAVY <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/GRAVY_Scores/human_uprot_Weismann_GRAVYScore_withoutSequence.txt", sep="", header = TRUE)
 dim(Human_uprot_weismann_GRAVY) # 13104 x 2
 #head(Human_uprot_weismann_GRAVY)
-View(Human_uprot_weismann_GRAVY)
+#View(Human_uprot_weismann_GRAVY)
 
-# Remove the leading '>' from the header in the GRAVY dataframe
+# Removing the leading '>' from the header in the GRAVY dataframe
 Human_uprot_weismann_GRAVY$header <- sub("^>", "", Human_uprot_weismann_GRAVY$header)
 
-# Read the second table with IUpred2 scores
+# Reading the second table with IUpred2 scores
 Human_uprot_weismann_IUpred2 <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/IUPred_Scores/human_uprots_weissma_riboseq_11_100.IUPred_score.txt", sep="", header = TRUE)
 dim(Human_uprot_weismann_IUpred2) # 10694 x 2
 #head(Human_uprot_weismann_IUpred2)
-View(Human_uprot_weismann_IUpred2)
+#View(Human_uprot_weismann_IUpred2)
 
-# Merge the two tables by their ID, which is assumed to be in the 'header' column
+# Merging the two tables by their ID, which is assumed to be in the 'header' column
 merged_data <- merge(Human_uprot_weismann_GRAVY, Human_uprot_weismann_IUpred2,by = "header")
 final_merged_data <- merge(merged_data, Human_uprot_weismann_TMHMM,by = "header" )
 View(final_merged_data)
 
-# If you want to add the 'type' column with value "Microprotein"
+# Adding the 'type' column with value "Microprotein"
 final_merged_data$type <- "Microprotein"
 
-# To place the 'type' column in the second position
+# Placing the 'type' column in the second position
 final_merged_data <- final_merged_data[c("header", "length","type", "GRAVY", "IUPred2", "TMHMM_score")]
 View(final_merged_data)
 
@@ -2973,44 +2966,44 @@ Human_membprot_mpstruc_TMHMM <- read.table("/Users/namrataxxx/Desktop/Master_The
 head(Human_membprot_mpstruc_TMHMM)
 dim(Human_membprot_mpstruc_TMHMM) # 1758 x 3
 
-# Read the first table with GRAVY scores
+# Reading the first table with GRAVY scores
 Human_membprot_mpstruc_GRAVY <- read.delim("//Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/GRAVY_Scores/human_membprot_mpstrucDB_GRAVYScore_withoutSequence.txt", sep="", header = TRUE)
 dim(Human_membprot_mpstruc_GRAVY) # 1749 x 2
 #head(Human_membprot_mpstruc_GRAVY)
-View(Human_membprot_mpstruc_GRAVY) 
+#View(Human_membprot_mpstruc_GRAVY) 
 
-# Remove the leading '>' from the header in the GRAVY dataframe
+# Removing the leading '>' from the header in the GRAVY dataframe
 Human_membprot_mpstruc_GRAVY$header <- sub("^>", "", Human_membprot_mpstruc_GRAVY$header)
 
-# Read the second table with IUpred2 scores
+# Reading the second table with IUpred2 scores
 Human_membprot_mpstruc_IUpred2 <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/IUPred_Scores/human_membprot_mpStruc_IUpred_score.txt", sep="", header = TRUE)
 dim(Human_membprot_mpstruc_IUpred2) # 1758 x 2
 #head(Human_membprot_mpstruc_IUpred2)
-View(Human_membprot_mpstruc_IUpred2)
+#View(Human_membprot_mpstruc_IUpred2)
 
-# Merge the two tables by their ID, which is assumed to be in the 'header' column
+# Merging the two tables by their ID, which is assumed to be in the 'header' column
 merged_data_membprot <- merge(Human_membprot_mpstruc_GRAVY, Human_membprot_mpstruc_IUpred2, by = "header")
 final_merged_data_membprot <- merge(merged_data_membprot, Human_membprot_mpstruc_TMHMM, by = "header")
 View(final_merged_data_membprot)
 
 
-# If you want to add the 'type' column with value "Membrane protein"
+# Adding the 'type' column with value "Membrane protein"
 final_merged_data_membprot$type <- "Membrane protein"
 
-# To place the 'type' column in the second position
+# Placing the 'type' column in the second position
 final_merged_data_membprot <- final_merged_data_membprot[c("header", "length","type", "GRAVY", "IUpred2", "TMHMM_score")]
-View(final_merged_data_membprot)
+#View(final_merged_data_membprot)
 
 sum(is.na(final_merged_data_membprot))
 final_merged_data_membprot <- na.omit(final_merged_data_membprot)
 dim(final_merged_data_membprot) # 1749 x  6
 # Renaming the merged dataset
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM <- final_merged_data_membprot  
-View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM)
+#View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM)
 # Removing duplicates
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM <- human_membprot_mpstruc_GRAVY_IUpred2_TMHMM[!duplicated(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM$header), ]
 dim(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM) # 1749 x  6
-View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM)
+#View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM)
 
 # Selecting sequences only above 100 aa.
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100 <- human_membprot_mpstruc_GRAVY_IUpred2_TMHMM[human_membprot_mpstruc_GRAVY_IUpred2_TMHMM$length > 100,]
@@ -3023,41 +3016,41 @@ dim(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100) # 1455 x 6
 
 Human_globprot_ScopeAstral40_TMHMM <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/TMHMM_Scores/human_globprot_scopeAstral40DB_TMHMMScore_final.txt", header=TRUE, sep="\t")
 dim(Human_globprot_ScopeAstral40_TMHMM) #2383 x 3
-View(Human_globprot_ScopeAstral40_TMHMM)
+#View(Human_globprot_ScopeAstral40_TMHMM)
 
-# Read the first table with GRAVY scores
+# Reading the first table with GRAVY scores
 Human_globprot_ScopeAstral40_GRAVY <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/GRAVY_Scores/human_globprot_scpeAstral40DB_GRAVYScore_withoutSequence.txt", sep="", header = TRUE)
 dim(Human_globprot_ScopeAstral40_GRAVY) # 2788 x 2
-head(Human_globprot_ScopeAstral40_GRAVY)
+#head(Human_globprot_ScopeAstral40_GRAVY)
 #View(Human_globprot_ScopeAstral40_GRAVY)
 
-# Remove the leading '>' from the header in the GRAVY dataframe
+# Removing the leading '>' from the header in the GRAVY dataframe
 Human_globprot_ScopeAstral40_GRAVY$header <- sub("^>", "", Human_globprot_ScopeAstral40_GRAVY$header)
 
-# Read the second table with IUpred2 scores
+# Reading the second table with IUpred2 scores
 Human_globprot_ScopeAstral40_IUpred2 <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/IUPred_Scores/human_globular_protein_scope_astral_40.IUpred_score.txt", sep="", header = TRUE)
 dim(Human_globprot_ScopeAstral40_IUpred2) # 2383 x 2
 #head(Human_globprot_ScopeAstral40_IUpred2)
-View(Human_globprot_ScopeAstral40_IUpred2)
+#View(Human_globprot_ScopeAstral40_IUpred2)
 
-# Merge the two tables by their ID, which is assumed to be in the 'header' column
+# Merging the two tables by their ID, which is assumed to be in the 'header' column
 merged_dataglobprot_ScopeAstral40 <- merge(Human_globprot_ScopeAstral40_GRAVY, Human_globprot_ScopeAstral40_IUpred2, by = "header")
 final_merged_dataglobprot_ScopeAstral40 <- merge(merged_dataglobprot_ScopeAstral40, Human_globprot_ScopeAstral40_TMHMM, by = "header")
-View(final_merged_dataglobprot_ScopeAstral40)
+#View(final_merged_dataglobprot_ScopeAstral40)
 
-# If you want to add the 'type' column with value "Globular protein"
+# Adding the 'type' column with value "Globular protein"
 final_merged_dataglobprot_ScopeAstral40$type <- "Globular_protein"
 
-# To place the 'type' column in the second position
+# Placing the 'type' column in the second position
 final_merged_dataglobprot_ScopeAstral40 <- final_merged_dataglobprot_ScopeAstral40[c("header", "length","type", "GRAVY", "IUpred2", "TMHMM_score")]
-View(final_merged_dataglobprot_ScopeAstral40)
+#View(final_merged_dataglobprot_ScopeAstral40)
 
 sum(is.na(final_merged_dataglobprot_ScopeAstral40))
 final_merged_dataglobprot_ScopeAstral40 <- na.omit(final_merged_dataglobprot_ScopeAstral40)
 dim(final_merged_dataglobprot_ScopeAstral40) # 2788 x  6
 # Renaming the merged dataset
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM <- final_merged_dataglobprot_ScopeAstral40  
-View(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM) 
+#View(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM) 
 # Removing duplicates
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM <- human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM[!duplicated(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM$header), ]
 dim(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM) # 2383 x 6
@@ -3071,55 +3064,50 @@ dim(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100) # 1527 x 6
 ```{r}
 # These datasets for IDP (Disprot DB) contains prediction scores for for GRAVY, DeepTMHMM, IUPred2A
 # Disordered protein dataset
-
 Human_IDP_Disprot_TMHMM <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/TMHMM_Scores/human_IDP_Disprot_TMHMMScore_final.txt", header=TRUE, sep="\t")
-View(Human_IDP_Disprot_TMHMM)
+#View(Human_IDP_Disprot_TMHMM)
 dim(Human_IDP_Disprot_TMHMM) # 4587 x 3
 
-# Read the first table with GRAVY scores
+# Reading the first table with GRAVY scores
 Human_IDP_Disprot_GRAVY <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/GRAVY_Scores/human_IDP_Disprot_GRAVYScore_without_sequence1.txt", sep="\t", header = TRUE)
 dim(Human_IDP_Disprot_GRAVY) # 4587 x 8 
 #head(Human_IDP_Disprot_GRAVY)
-View(Human_IDP_Disprot_GRAVY)
+#View(Human_IDP_Disprot_GRAVY)
 
 Human_IDP_Disprot_GRAVY <- Human_IDP_Disprot_GRAVY[c(1,2)]
-
-# Rename the second column to "GRAVY"
+# Renaming the second column to "GRAVY"
 names(Human_IDP_Disprot_GRAVY)[2] <- "GRAVY"
 
-
-# Read the second table with fasta IDs to replace in the header column in previous dataframe.
+# Reading the second table with fasta IDs to replace in the header column in previous dataframe.
 Human_IDP_Disprot_GRAVY2 <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/GRAVY_Scores/human_IDP_Disprot_GRAVYScore_without_sequence2.txt", sep="\t", header = TRUE)
 dim(Human_IDP_Disprot_GRAVY2) # 4587 x 1
-View(Human_IDP_Disprot_GRAVY2)
+#View(Human_IDP_Disprot_GRAVY2)
 
 # Replacing the 'header' column in df1 with the 'header' column from df2
 Human_IDP_Disprot_GRAVY$header <- Human_IDP_Disprot_GRAVY2$header
 Human_IDP_Disprot_GRAVY <- Human_IDP_Disprot_GRAVY[c(2,3)]
 
-# Remove the leading '>' from the header in the GRAVY dataframe
+# Removing the leading '>' from the header in the GRAVY dataframe
 Human_IDP_Disprot_GRAVY$header <- sub("^>", "", Human_IDP_Disprot_GRAVY$header)
-
-View(Human_IDP_Disprot_GRAVY)
+#View(Human_IDP_Disprot_GRAVY)
 
 # Read the second table with IUpred2 scores
 Human_IDP_Disprot_IUpred2 <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/IUPred_Scores/human_IDP_Disprot_IUpred_score.txt", sep="", header = TRUE)
 dim(Human_IDP_Disprot_IUpred2) # 4587 x 2
 #head(Human_IDP_Disprot_IUpred2)
-View(Human_IDP_Disprot_IUpred2)
+#View(Human_IDP_Disprot_IUpred2)
 
-
-# Merge the two tables by their ID, which is assumed to be in the 'header' column
+# Merging the two tables by their ID, which is assumed to be in the 'header' column
 merged_data_IDP_Disprot <- merge(Human_IDP_Disprot_GRAVY, Human_IDP_Disprot_IUpred2, by = "header")
 final_merged_data_IDP_Disprot <- merge(merged_data_IDP_Disprot, Human_IDP_Disprot_TMHMM, by = "header")
-View(final_merged_data_IDP_Disprot)
+#View(final_merged_data_IDP_Disprot)
 
-# If you want to add the 'type' column with value "Microprotein"
+# Adding the 'type' column with value "Disordered_protein"
 final_merged_data_IDP_Disprot$type <- "Disordered_protein"
 
-# To place the 'type' column in the second position
+# Placing the 'type' column in the second position
 final_merged_data_IDP_Disprot <- final_merged_data_IDP_Disprot[c("header", "length","type", "GRAVY", "IUpred2", "TMHMM_score")]
-View(final_merged_data_IDP_Disprot)
+#View(final_merged_data_IDP_Disprot)
 
 sum(is.na(final_merged_data_IDP_Disprot))
 final_merged_data_IDP_Disprot <- na.omit(final_merged_data_IDP_Disprot)
@@ -3127,7 +3115,7 @@ dim(final_merged_data_IDP_Disprot) # 4587 x  6
 
 # Renaming the merged dataset
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM <- final_merged_data_IDP_Disprot  
-View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM)
+#View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM)
 
 # Removing duplicates
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM <- human_IDP_Disprot_GRAVY_IUpred2_TMHMM[!duplicated(human_IDP_Disprot_GRAVY_IUpred2_TMHMM$header), ]
@@ -3136,50 +3124,50 @@ dim(human_IDP_Disprot_GRAVY_IUpred2_TMHMM) # 4587 x 6
 # Selecting sequences only above 100 aa.
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100 <- human_IDP_Disprot_GRAVY_IUpred2_TMHMM[human_IDP_Disprot_GRAVY_IUpred2_TMHMM$length > 100,]
 dim(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100) # 1069 x 6
-View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
 
 ```
 
 ```{r}
-# These datasets for peptides_new (NCBI database) contains prediction scores for GRAVY, DeepTMHMM, IUPred2A
-# Peptides dataset
+# These datasets for peptides (NCBI database) contains prediction scores for GRAVY, DeepTMHMM, IUPred2A
+# Peptide dataset
 
 Human_peptides_new_NCBI_TMHMM <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/TMHMM_Scores/human_peptide_NCBI_TMHMMScore_2500Seq_final.txt", header=TRUE, sep="\t")
 dim(Human_peptides_new_NCBI_TMHMM) # 1461 x 3
 
-# Read the first table with GRAVY scores
+# Reading the first table with GRAVY scores
 Human_peptides_new_NCBI_GRAVY <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/GRAVY_Scores/human_peptide_NCBI_GRAVYScore_withoutSequence.txt", sep="", header = TRUE)
 dim(Human_peptides_new_NCBI_GRAVY) # 2789 x 2
 #head(Human_peptides_new_NCBI_GRAVY)
-View(Human_peptides_new_NCBI_GRAVY)
+#View(Human_peptides_new_NCBI_GRAVY)
 
-# Remove the leading '>' from the header in the GRAVY dataframe
+# Removing the leading '>' from the header in the GRAVY dataframe
 Human_peptides_new_NCBI_GRAVY$header <- sub("^>", "", Human_peptides_new_NCBI_GRAVY$header)
 
-# Read the second table with IUpred2 scores
+# Reading the second table with IUpred2 scores
 Human_peptides_new_NCBI_IUpred2 <- read.delim("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Tools_Prediction_score_data/IUPred_Scores/human_peptideSeq_NCBI_new.IUpred_score.txt", sep="", header = TRUE)
 dim(Human_peptides_new_NCBI_IUpred2) # 1455 x 2
 #head(Human_peptides_new_NCBI_IUpred2)
-View(Human_peptides_new_NCBI_IUpred2)
+#View(Human_peptides_new_NCBI_IUpred2)
 
-# Merge the two tables by their ID, which is assumed to be in the 'header' column
+# Merging the two tables by their ID, which is assumed to be in the 'header' column
 merged_data_peptides_new_NCBI <- merge(Human_peptides_new_NCBI_GRAVY, Human_peptides_new_NCBI_IUpred2, by = "header")
 final_merged_data_peptides_new_NCBI <- merge(merged_data_peptides_new_NCBI, Human_peptides_new_NCBI_TMHMM, by = "header")
-View(final_merged_data_peptides_new_NCBI)
+#View(final_merged_data_peptides_new_NCBI)
 
-# If you want to add the 'type' column with value "Peptides"
+# Adding the 'type' column with value "Peptides"
 final_merged_data_peptides_new_NCBI$type <- "Peptides"
 
-# To place the 'type' column in the second position
+# Placing the 'type' column in the second position
 final_merged_data_peptides_new_NCBI <- final_merged_data_peptides_new_NCBI[c("header", "length","type", "GRAVY", "IUpred2", "TMHMM_score")]
-View(final_merged_data_peptides_new_NCBI)
+#View(final_merged_data_peptides_new_NCBI)
 
 sum(is.na(final_merged_data_peptides_new_NCBI))
 final_merged_data_peptides_new_NCBI <- na.omit(final_merged_data_peptides_new_NCBI)
 dim(final_merged_data_peptides_new_NCBI) # 2535 x  6
 # Renaming the merged dataset
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM <- final_merged_data_peptides_new_NCBI  
-View(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
+#View(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
 # Removing duplicates
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM <- human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM[!duplicated(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$header), ]
 dim(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM) # 1323 x 6 
@@ -3187,8 +3175,7 @@ dim(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM) # 1323 x 6
 ```
 
 ```{r}
-
-# Create the ggplot objects for GRAVY, IUpred2A, and TMHMM scores with improved histograms
+# Creating the ggplot objects for GRAVY, IUpred2A, and TMHMM scores with improved histograms
 p1_uprot <- ggplot(human_uprot_weismann_GRAVY_IUpred2_TMHMM, aes(x=GRAVY)) +
   geom_histogram(binwidth=0.1, fill="#0073C2FF", color="black", alpha=0.7) +
   labs(title="Distribution of GRAVY Scores", x="GRAVY Score", y="Frequency") +
@@ -3229,13 +3216,13 @@ print(combined_plot)
 ```
 
 ```{r}
-# Z-score normalization of uprot
+# Z-score normalization of microproteins
 human_uprot_weismann_GRAVY_IUpred2_TMHMM$GRAVY_normalized <- scale(human_uprot_weismann_GRAVY_IUpred2_TMHMM$GRAVY)
 human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUpred2_normalized <- scale(human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUPred2)
 human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_normalized <- scale(human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_score)
-View(human_uprot_weismann_GRAVY_IUpred2_TMHMM)
+#View(human_uprot_weismann_GRAVY_IUpred2_TMHMM)
 
-# Create the ggplot objects for GRAVY and IUpred2 scores with only frequency histograms
+# Creating the ggplot objects for GRAVY and IUpred2 scores with only frequency histograms
 p1_uprot_z_normalized <- ggplot(human_uprot_weismann_GRAVY_IUpred2_TMHMM, aes(x=GRAVY_normalized)) +
   geom_histogram(binwidth=0.1, fill="blue", alpha=0.5) +
   labs(title="Distribution of z-normalized GRAVY Scores", x="Normalized GRAVY Score", y="Frequency") +
@@ -3258,7 +3245,7 @@ p1_uprot_z_normalized + p2_uprot_z_normalized + p3_uprot_z_normalized
 
 ```{r}
 ### Z-score normalizing and combining all the dataset.
-View(human_uprot_weismann_GRAVY_IUpred2_TMHMM)
+#View(human_uprot_weismann_GRAVY_IUpred2_TMHMM)
 z_sore_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM <- human_uprot_weismann_GRAVY_IUpred2_TMHMM [c(1:3,7:9)]
 head(z_sore_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM)
 dim(z_sore_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM) # 7560 x 6
@@ -3267,7 +3254,7 @@ dim(z_sore_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM) # 7560 x 6
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY_normalized <- scale(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY)
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2_normalized <- scale(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2)
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_normalized <- scale(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score)
-View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100)
 
 z_sore_normalized_human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100 <- human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100 [c(1:3,7:9)]
 head(z_sore_normalized_human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100)
@@ -3277,7 +3264,7 @@ dim(z_sore_normalized_human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100) 
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY_normalized <- scale(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY)
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2_normalized <- scale(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2)
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_normalized <- scale(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score)
-View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
 
 z_sore_normalized_human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100 <- human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100 [c(1:3,7:9)]
 head(z_sore_normalized_human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
@@ -3287,7 +3274,7 @@ dim(z_sore_normalized_human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100) # 106
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY_normalized <- scale(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY)
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2_normalized <- scale(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2)
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_normalized <- scale(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score)
-View(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100)
 
 z_sore_normalized_human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100 <- human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100 [c(1:3,7:9)]
 head(z_sore_normalized_human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100)
@@ -3297,7 +3284,7 @@ dim(z_sore_normalized_human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longertha
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$GRAVY_normalized <- scale(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$GRAVY)
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2_normalized <- scale(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2)
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_normalized <- scale(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_score)
-View(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
+#View(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
 
 z_sore_normalized_human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM <- human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM [c(1:3,7:9)]
 head(z_sore_normalized_human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
@@ -3320,25 +3307,25 @@ z_sore_normalized_G_I_3 <- rbind(z_sore_normalized_G_I_2,z_sore_normalized_human
 combined_z_sore_normalized_G_I <- rbind(z_sore_normalized_G_I_3,z_sore_normalized_human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM_smallerORequal75)
 dim(combined_z_sore_normalized_G_I) # 9880  x  6
 head(combined_z_sore_normalized_G_I)
-View(combined_z_sore_normalized_G_I)
+#View(combined_z_sore_normalized_G_I)
 sum(is.na(combined_z_sore_normalized_G_I))
 combined_z_sore_normalized_G_I <- na.omit(combined_z_sore_normalized_G_I)
 ```
 
 ```{r}
-# Prepare the data for UMAP, selecting only the columns with the physical property values
+# Preparing the data for UMAP, selecting only the columns with the physical property values
 umap_data_combined_z_sore_normalized_G_I <- combined_z_sore_normalized_G_I[, c("GRAVY_normalized","IUpred2_normalized", "TMHMM_normalized")]
 head(umap_data_combined_z_sore_normalized_G_I)
-# Run UMAP
-set.seed(4) # Set a random seed for reproducibility
+# Running UMAP
+set.seed(4) 
 umap_result_combined_z_sore_normalized_G_I <- umap(umap_data_combined_z_sore_normalized_G_I,n_neighbors=15, min_dist=0.3)
 
-# Create a data frame for plotting that includes the UMAP dimensions and the protein type
+# Creating a data frame for plotting that includes the UMAP dimensions and the protein type
 plot_data_combined_z_sore_normalized_G_I <- data.frame(UMAP1 = umap_result_combined_z_sore_normalized_G_I$layout[,1], UMAP2 = umap_result_combined_z_sore_normalized_G_I$layout[,2], Type = combined_z_sore_normalized_G_I$type)
-# Define custom colors for the plot
+# Defining custom colors for the plot
 my_colors_combined_z_sore_normalized_G_I <- c("Disordered_protein" = "red", "Globular_protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptides" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 plot_combined_z_sore_normalized_G_I <- ggplot(plot_data_combined_z_sore_normalized_G_I, aes(x = UMAP1, y = UMAP2, color = Type)) +
   geom_point(size=0.75, alpha=0.75) + # Adjust point transparency with the alpha parameter
   scale_color_manual(values = my_colors_combined_z_sore_normalized_G_I) + # Use the custom colors
@@ -3351,17 +3338,17 @@ plot_combined_z_sore_normalized_G_I
 ```
 
 ```{r}
-# Perform t-SNE
-set.seed(42) # Set a random seed for reproducibility
+# Performing t-SNE
+set.seed(42) 
 tsne_result_combined_z_sore_normalized_G_I <- Rtsne(dist(umap_data_combined_z_sore_normalized_G_I), dims = 2, perplexity = 20, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
-# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+# Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
 tsne_data_combined_z_sore_normalized_G_I <- data.frame(TSNE1 = tsne_result_combined_z_sore_normalized_G_I$Y[,1], TSNE2 = tsne_result_combined_z_sore_normalized_G_I$Y[,2], Type = combined_z_sore_normalized_G_I$type)
 
-# Define custom colors for the plot
+# Defining custom colors for the plot
 my_colors_combined_z_sore_normalized_G_I <- c("Disordered_protein" = "red", "Globular_protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptides" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 plot_combined_z_sore_normalized_G_I <- ggplot(tsne_data_combined_z_sore_normalized_G_I, aes(x = TSNE1, y = TSNE2, color = Type)) +
    geom_point(size=0.65, alpha=0.75) + # Adjust point transparency with the alpha parameter
   scale_color_manual(values = my_colors_combined_z_sore_normalized_G_I) + # Use the custom colors
@@ -3378,7 +3365,7 @@ plot_combined_z_sore_normalized_G_I
 # Custom colors 
 my_colors_combined_z_sore_normalized_G_I <- c("Disordered_protein" = "red", "Globular_protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptides" = "pink")
 
-# Reshape the dataframe to long format
+# Reshaping the dataframe to long format
 df_long_combined_z_sore_normalized_G_I <- combined_z_sore_normalized_G_I %>%
   pivot_longer(cols = c("GRAVY_normalized","IUpred2_normalized", "TMHMM_normalized"),names_to = "property",values_to = "score")
 
@@ -3427,7 +3414,7 @@ human_uprot_weismann_GRAVY_IUpred2_TMHMM$GRAVY_minmax <- (human_uprot_weismann_G
 human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUpred2_minmax <- (human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUPred2 - min(human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUPred2)) / (max(human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUPred2) - min(human_uprot_weismann_GRAVY_IUpred2_TMHMM$IUPred2))
 
 human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_minmax <- (human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_score - min(human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_score)) / (max(human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_score) - min(human_uprot_weismann_GRAVY_IUpred2_TMHMM$TMHMM_score))
-View(human_uprot_weismann_GRAVY_IUpred2_TMHMM)
+#View(human_uprot_weismann_GRAVY_IUpred2_TMHMM)
 
 Min_max_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM <- human_uprot_weismann_GRAVY_IUpred2_TMHMM [c(1:3,10:12)]
 head(Min_max_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM)
@@ -3439,7 +3426,7 @@ human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY_minmax <- (human_IDP_D
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2_minmax <- (human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2 - min(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2)) / (max(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2) - min(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2))
 
 human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_minmax <- (human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score - min(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score)) / (max(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score) - min(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score))
-View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
 
 Min_max_normalized_human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100 <- human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100 [c(1:3,10:12)]
 head(Min_max_normalized_human_IDP_Disprot_GRAVY_IUpred2_TMHMM_longerthan100)
@@ -3451,7 +3438,7 @@ human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY_minmax <- (human_
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2_minmax <- (human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2 - min(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2)) / (max(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2) - min(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2))
 
 human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_minmax <- (human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score - min(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score)) / (max(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score) - min(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score))
-View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100)
 
 Min_max_normalized_human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100 <- human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100 [c(1:3,10:12)]
 head(Min_max_normalized_human_membprot_mpstruc_GRAVY_IUpred2_TMHMM_longerthan100)
@@ -3463,7 +3450,7 @@ human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$GRAVY_minmax <- (
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2_minmax <- (human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2 - min(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2)) / (max(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2) - min(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$IUpred2))
 
 human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_minmax <- (human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score - min(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score)) / (max(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score) - min(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100$TMHMM_score))
-View(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100)
+#View(human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100)
 
 Min_max_normalized_human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100 <- human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100 [c(1:3,10:12)]
 head(Min_max_normalized_human_globprot_ScopeAstral40_GRAVY_IUpred2_TMHMM_longerthan100)
@@ -3475,7 +3462,7 @@ human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$GRAVY_minmax <- (human_peptides_new_
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2_minmax <- (human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2 - min(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2)) / (max(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2) - min(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$IUpred2))
 
 human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_minmax <- (human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_score - min(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_score)) / (max(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_score) - min(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM$TMHMM_score))
-View(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
+#View(human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
 
 Min_max_normalized_human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM <- human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM [c(1:3,10:12)]
 head(Min_max_normalized_human_peptides_new_NCBI_GRAVY_IUpred2_TMHMM)
@@ -3503,7 +3490,7 @@ combined_Min_max_normalized_G_I <- na.omit(combined_Min_max_normalized_G_I)
 ```
 
 ```{r}
-# Create the ggplot objects for GRAVY and IUpred2 scores with only frequency histograms
+# Creating the ggplot objects for GRAVY and IUpred2 scores with only frequency histograms
 p1_uprot_Min_max_normalized_G_I <- ggplot(Min_max_normalized_human_uprot_weismann_GRAVY_IUpred2_TMHMM_5000, aes(x=GRAVY_minmax)) +
   geom_histogram(binwidth=0.1, fill="blue", alpha=0.5) +
   labs(title="Distribution of minmax_normalized GRAVY Scores", x="Minmax_normalized GRAVY Score", y="Frequency") +
@@ -3529,7 +3516,7 @@ p1_uprot_Min_max_normalized_G_I + p2_uprot_Min_max_normalized_G_I + p3_uprot_Min
 # Custom colors 
 my_colors_combined_z_sore_normalized_G_I <- c("Disordered_protein" = "red", "Globular_protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptides" = "pink")
 
-# Reshape the dataframe to long format
+# Reshaping the dataframe to long format
 df_long_combined_Min_max_normalized_G_I <- combined_Min_max_normalized_G_I %>%
   pivot_longer(cols = c("GRAVY_minmax","IUpred2_minmax" ,"TMHMM_minmax"),names_to = "property",values_to = "score")
 
@@ -3570,19 +3557,19 @@ print(p_TMHMM_normalized_combined_Min_max_normalized_G_I)
 ```
 
 ```{r}
-# Prepare the data for UMAP, selecting only the columns with the physical property values
+# Preparing the data for UMAP, selecting only the columns with the physical property values
 umap_data_combined_Min_max_normalized_G_I <- combined_Min_max_normalized_G_I[, c("GRAVY_minmax","IUpred2_minmax","TMHMM_minmax")]
 head(umap_data_combined_Min_max_normalized_G_I)
-# Run UMAP
-set.seed(4) # Set a random seed for reproducibility
+# Running UMAP
+set.seed(4) 
 umap_result_combined_Min_max_normalized_G_I <- umap(umap_data_combined_Min_max_normalized_G_I,n_neighbors=15, min_dist=0.3)
 
-# Create a data frame for plotting that includes the UMAP dimensions and the protein type
+# Creating a data frame for plotting that includes the UMAP dimensions and the protein type
 plot_data_combined_Min_max_normalized_G_I <- data.frame(UMAP1 = umap_result_combined_Min_max_normalized_G_I$layout[,1], UMAP2 = umap_result_combined_Min_max_normalized_G_I$layout[,2], Type = combined_Min_max_normalized_G_I$type)
 # Define custom colors for the plot
 my_colors_combined_z_sore_normalized_G_I <- c("Disordered_protein" = "red", "Globular_protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptides" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 plot_combined_Min_max_normalized_G_I_UMAP <- ggplot(plot_data_combined_Min_max_normalized_G_I, aes(x = UMAP1, y = UMAP2, color = Type)) +
   geom_point(size=0.75, alpha=0.75) + # Adjust point transparency with the alpha parameter
   scale_color_manual(values = my_colors_combined_z_sore_normalized_G_I) + # Use the custom colors
@@ -3595,17 +3582,17 @@ plot_combined_Min_max_normalized_G_I_UMAP
 ```
 
 ```{r}
-# Perform t-SNE
-set.seed(42) # Set a random seed for reproducibility
+# Performing t-SNE
+set.seed(42)
 tsne_result_combined_Min_max_normalized_G_I <- Rtsne(dist(umap_data_combined_Min_max_normalized_G_I), dims = 2, perplexity = 20, theta = 0.0, max_iter= 1000, verbose = FALSE )
 
-# Create a data frame for plotting that includes the t-SNE dimensions and the protein type
+# Creating a data frame for plotting that includes the t-SNE dimensions and the protein type
 tsne_data_combined_Min_max_normalized_G_I <- data.frame(TSNE1 = tsne_result_combined_Min_max_normalized_G_I$Y[,1], TSNE2 = tsne_result_combined_Min_max_normalized_G_I$Y[,2], Type = combined_Min_max_normalized_G_I$type)
 
-# Define custom colors for the plot
+# Defining custom colors for the plot
 my_colors_combined_Min_max_normalized_G_I_normalized_G_I <- c("Disordered_protein" = "red", "Globular_protein" = "green", "Membrane protein" = "blue", "Microprotein" = "yellow", "Peptides" = "pink")
 
-# Plot using ggplot2
+# Plotting using ggplot2
 plot_combined_Min_max_normalized_G_I <- ggplot(tsne_data_combined_Min_max_normalized_G_I, aes(x = TSNE1, y = TSNE2, color = Type)) +
    geom_point(size=0.65, alpha=0.75) + # Adjust point transparency with the alpha parameter
   scale_color_manual(values = my_colors_combined_Min_max_normalized_G_I_normalized_G_I) + # Use the custom colors
@@ -3616,159 +3603,20 @@ plot_combined_Min_max_normalized_G_I <- ggplot(tsne_data_combined_Min_max_normal
   theme_minimal()
 plot_combined_Min_max_normalized_G_I
 ```
-
-# Statistical testing for checking of the protein groups are different on the basis of prediction scores.
-```{r}
-# Loading the dataset
-df_combined_disport_control6_5PP_J <- combined_disport_control6_5PP_J
-
-# Inspecting the dataset
-head(df_combined_disport_control6_5PP_J)
-
-# Defining the properties to test
-properties <- c("CIDH920105_norm", "CHOP780101_norm", "CHOP780201_norm", "CHOP780202_norm", "KLEP840101_norm")
-
-# Function to perform subsampling
-subsample_proteins <- function(data, sample_size = 100) {
-  data %>%
-    group_by(type) %>%
-    sample_n(sample_size, replace = FALSE)
-}
-
-# Performing subsampling
-subsampled_df <- subsample_proteins(df_combined_disport_control6_5PP_J)
-
-# Checking the length distribution of the subsampled dataset
-length_distribution <- subsampled_df %>%
-  group_by(type) %>%
-  summarise(mean_length = mean(length), sd_length = sd(length), count = n())
-
-# Printing length distribution
-cat("\nLength distribution of subsampled dataset:\n")
-print(length_distribution)
-
-# Plotting length distribution
-ggplot(subsampled_df, aes(x = type, y = length, fill = type)) +
-  geom_boxplot() +
-  labs(title = "Length Distribution of Subsampled Dataset", x = "Protein Type", y = "Length") +
-  theme_minimal()
-
-```
-
-```{r}
-# Checking normality for each property
-normality_results <- list()
-for (property in properties) {
-  normality_test <- shapiro.test(subsampled_df[[property]])
-  normality_results[[property]] <- normality_test
-}
-
-# Printing normality test results
-for (property in properties) {
-  cat("\nNormality test results for", property, ":\n")
-  print(normality_results[[property]])
-}
-```
-
-# Visualizations using histograms,box,QQ,density plots on complete dataset.
-```{r}
-properties <- names(combined_disport_control6_5PP_J)[4:8] 
-
-# Create a combined histogram plot for each property
-for (property in properties) {
-  ggplot(combined_disport_control6_5PP_J, aes_string(x = property, fill = 'type')) + 
-    geom_histogram(binwidth = 0.1, alpha = 0.6, position = 'identity') + # adjust binwidth as needed
-    facet_wrap(~type, scales = "free") + 
-    theme_bw() +
-    labs(title = paste("Histogram for", property), x = property, y = "Count") +
-    theme(legend.position = "bottom") -> p
-  
-  print(p)
-}
-
-```
-
-```{r}
-# Create Q-Q plots for each property
-for (property in properties) {
-  ggplot(combined_disport_control6_5PP_J, aes_string(sample = property)) + 
-    stat_qq() +
-    stat_qq_line() +
-    facet_wrap(~type, scales = "free") +
-    theme_bw() +
-    labs(title = paste("Q-Q Plot for", property)) -> p
-  
-  print(p)
-}
-
-# In the case of KLEP840101, the deviations from the line in the Q-Q plots suggest that the physicochemical properties for these protein types do not follow a normal distribution. This is particularly true for the tails of the distributions (both light and heavy tails) and is most pronounced in the "micro" and "peptide" protein types. If the points in the QQ plot fall approximately along a straight line, it suggests that the two distributions being compared are similar.
-#If the points deviate systematically from a straight line, it indicates that the distributions differ. Deviations towards the ends of the line indicate that one distribution is more spread out than the other.
-```
-
-```{r}
-# Create a density plot for each property
-for (property in properties) {
-  ggplot(combined_disport_control6_5PP_J, aes_string(x = property, fill = 'type')) + 
-    geom_density(alpha = 0.6) +
-    facet_wrap(~type, scales = "free") +
-    theme_bw() +
-    labs(title = paste("Density Plot for", property), x = property, y = "Density") +
-    theme(legend.position = "bottom") -> p
-  
-  print(p)
-}
-
-# Conclusion: Overall, the plots suggest that the physicochemical property scores are not normally distributed. There are significant variations among the protein types, with some showing a sharp peak indicating that most proteins have similar physicochemical property scores, while others have a broader distribution.
-
-#The skewness and multiple peaks in some protein types suggest that the underlying biological processes may produce these properties in a non-uniform manner, or there could be subgroups within the types that have different characteristics. These observations suggest caution when applying statistical tests that assume normal distributions, and they also provide insight into the biological variability inherent in these protein types.
-```
-
-# Performing Kruskal-Wallis test followed by pairwise comparison using dunn test (if  Kruskal-Wallis test results are found significant)
-```{r}
-# Performing Kruskal-Wallis test for each property
-kruskal_results <- list()
-for (property in properties) {
-  formula <- as.formula(paste(property, "~ type"))
-  kruskal_test <- kruskal.test(formula, data = subsampled_df)
-  kruskal_results[[property]] <- kruskal_test
-}
-
-# Print Kruskal-Wallis results
-for (property in properties) {
-  cat("\nKruskal-Wallis test results for", property, ":\n")
-  print(kruskal_results[[property]])
-}
-```
-
-```{r}
-# Performing post-hoc Dunn's test for each property
-dunn_results <- list()
-for (property in properties) {
-  dunn_test <- dunnTest(subsampled_df[[property]] ~ subsampled_df$type, method = "bonferroni")
-  dunn_results[[property]] <- dunn_test
-}
-
-# Print Dunn's test results
-for (property in properties) {
-  cat("\nDunn's test results for", property, ":\n")
-  print(dunn_results[[property]])
-}
-```
-
-
 # Script for analysis of AlphaFold results on 500 microprotein samples. Follwing things are being done:
 # 1. plotting the distibution of plDDT scores
 # 2. Checking correlation between plDDT scores and scores output from agadir wrapper
 
 ```{r}
-average_plDDT <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/microproteins/average_plddt.txt", header=FALSE, sep="\t")
+average_plDDT <- read.table("/Users/namrataxxx/Desktop/Master_Thesis_material/Thesis_data_script_result/Weismann_Scope_MObiDB_Mpstruc_DimRed_JoostIDs/Master_Thesis_Data_Files/average_plddt.txt", header=FALSE, sep="\t")
 dim(average_plDDT) # 497  x  2
+View(average_plDDT)
 # Rename columns in average_plDDT
 colnames(average_plDDT) <- c("protein", "plDDT")
 View(average_plDDT)
 
 # Create histogram with density overlay
-ggplot(average_plDDT, aes(x = V2)) +
+ggplot(average_plDDT, aes(x = plDDT)) +
   geom_histogram(binwidth = 1, fill = "skyblue", color = "black", alpha = 0.5) +
   geom_density(aes(y = ..count..), fill = "orange", alpha = 0.5) +
   labs(title = "Distribution of plDDT Scores",
@@ -3778,22 +3626,17 @@ ggplot(average_plDDT, aes(x = V2)) +
 ```
 
 ```{r}
-# Filtering out proteins from second dataframe 
-# Filter the normalized_human_uprot_weismann_8physpropsids data frame
-filtered_data_pp_uprot <- normalized_human_uprot_weismann_8physpropsids %>%
-  filter(protein %in% average_plDDT$protein)
+# Filtering the normalized_human_uprot_weismann_8physpropsids data frame
+filtered_data_pp_uprot <- normalized_human_uprot_weismann_8physpropsids %>%filter(protein %in% average_plDDT$protein)
 # selecting only 5 pps
 filtered_data_pp_uprot <- filtered_data_pp_uprot[c(1:8)]
 
 # rename the physico-chemical property columns
 colnames(filtered_data_pp_uprot) <- c("protein", "type","length","hydrophobicity","beta-turn frequency","alpha-helix frequency","beta-sheet frequency","net-charge")
-# Check the result
 View(filtered_data_pp_uprot)
 
 # merging plDDT and pp dataframes
 merged_data_plDDT_pp <- left_join(average_plDDT, filtered_data_pp_uprot, by = "protein")
-
-# Check the result
 View(merged_data_plDDT_pp)
 ```
 
@@ -3802,37 +3645,25 @@ View(merged_data_plDDT_pp)
 merged_data_plDDT_pp_scores <- merged_data_plDDT_pp[c(1,2,5:9)]
 head(merged_data_plDDT_pp_scores)
 long_data_plDDT_pp <- melt(merged_data_plDDT_pp_scores, id.vars = "protein", variable.name = "Property", value.name = "Score")
-View(long_data_plDDT_pp)
-# Standardizing the scores within the long_data dataframe
-long_data_plDDT_pp$Score <- scale(long_data_plDDT_pp$Score)
-
-# Plotting again with scaled scores
-ggplot(long_data_plDDT_pp, aes(x = Property, y = Score)) +
-  geom_violin(trim = FALSE) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Normalized Distribution of pLDDT and Physico-Chemical Properties", x = "Property", y = "Normalized Score")
-
+#View(long_data_plDDT_pp)
 ```
 
 ```{r}
-# Print the column names of your dataframe
 names(merged_data_plDDT_pp_scores)
 
-# Calculate the correlation matrix
+# Calculating the correlation matrix
 cor_matrix_merged_data_plDDT_pp <- cor(merged_data_plDDT_pp_scores[, c("plDDT", "hydrophobicity", "beta-turn frequency", "alpha-helix frequency", "beta-sheet frequency", "net-charge")], use = "complete.obs")
 
-# Print the correlation matrix
+# Printing the correlation matrix
 print(cor_matrix_merged_data_plDDT_pp)
 
 ```
 
 ```{r}
 # plots on scaled data
-# Select columns to scale, assuming they start from the second column to the seventh
+# Selecting columns to scale
 scaled_data <- merged_data_plDDT_pp_scores
 scaled_data[2:7] <- scale(merged_data_plDDT_pp_scores[2:7])
-
-# View the scaled data to confirm scaling
 head(scaled_data)
 
 # Plotting using standard evaluation
@@ -3844,12 +3675,12 @@ plot_list <- lapply(names(scaled_data)[2:7], function(property) {
          x = "pLDDT Score", y = property)
 })
 
-# Create and store the grid plot
+# Creating and store the grid plot
 if (length(plot_list) > 0) {
   combined_plot <- do.call(grid.arrange, plot_list)
 }
 
-# Save the plot
+# Saving the plot
 #ggsave("combined_plots.png", plot = combined_plot, width = 16, height = 8, dpi = 300)
 
 ```
@@ -3878,12 +3709,12 @@ pc_data <- as.data.frame(pc_data)
 # Setting the physicochemical property IDs as row names
 rownames(pc_data) <- pc_data$AA
 pc_data$AA <- NULL # remove the 'AA' column
-View(pc_data)
+#View(pc_data)
 
 # Standardizing the data by subtracting the mean and dividing by variance
 pc_data_scaled <- scale(pc_data,center = TRUE, scale = TRUE)
 #View(pc_data_scaled)
-dim(pc_data_scaled)
+dim(pc_data_scaled) # 547 x 20
 
 ```
 
@@ -3925,103 +3756,16 @@ pc1_loadings <- pca_result$rotation[, "PC1"]
 # Creating a data frame from the loadings
 loadings_df <- data.frame(physprop_id = rownames(pca_result$rotation), loading = pc1_loadings)
 #View(loadings_df)
-
-# Sorting the dataframe by the absolute value of loading, and select the top 25
-top_loadings <- loadings_df %>%
-  arrange(desc(abs(loading))) %>%
-  top_n(25, abs(loading))
-
-
-ggplot(top_loadings, aes(x = reorder(physprop_id, loading), y = loading, fill = loading > 0)) +
-  geom_bar(stat = "identity") +
-  coord_flip() + # Flip the coordinates for better readability
-  scale_fill_manual(values = c("red", "blue"), labels = c("Negative", "Positive")) +
-  theme_minimal() +
-  labs(x = "Physprop ID", y = "Loading Value", fill = "Loading Sign") +
-  ggtitle("Top variables by Loading Value")
-
-
-```
-
-
-
-```{r}
-# Performing UMAP dimensionality reduction
-set.seed(42) # Set a seed for reproducibility
-umap_result <- umap(pc_data_scaled)
-
-# Performing k-means clustering on the UMAP results
-set.seed(42) # Set a seed for reproducibility
-kmeans_result <- kmeans(umap_result$layout, 8, 30) # Change the number of centers as needed
-
-# Creating a dataframe for plotting UMAP results
-umap_df <- data.frame(UMAP1 = umap_result$layout[,1], UMAP2 = umap_result$layout[,2], Labels = rownames(pc_data_scaled))
-umap_df$Cluster <- as.factor(kmeans_result$cluster) # Assign cluster results to the dataframe
-
-# Finding the closest point to each cluster's centroid
-get_closest_points <- function(kmeans_result, umap_result) {
-  centers <- kmeans_result$centers
-  closest_points <- apply(centers, 1, function(center) {
-    which.min(colSums((t(umap_result$layout) - center)^2))
-  })
-  return(closest_points)
-}
-
-closest_points <- get_closest_points(kmeans_result, umap_result)
-
-# Extracting the representative IDs based on the indices found
-representative_ids <- rownames(pc_data_scaled)[closest_points]
-
-
-# Printing out the representative IDs
-print(representative_ids)
-
 ```
 
 ```{r}
-## Labeliing the calculated representative IDs on the UMAP plot along with IDs suggetsed by my host lab.
-specific_ids <- c("CIDH920105", "CHOP780101", "CHOP780201", "CHOP780202", "KLEP840101", "TANS770110", "KARP850103", "CHAM830105", "QIAN880123", "CORJ870102", "ONEK900101" ,"RACS820105", "TANS770101")
-
-# Creating a new label column that is blank by default, and label only the specific IDs
-umap_df$IDLabels <- ifelse(umap_df$Labels %in% specific_ids, umap_df$Labels, '')
-
-# Creating a custom color palette for clusters, avoiding the 'red' color to reserve it for specific IDs
-cluster_colors <- setNames(rainbow(length(unique(kmeans_result$cluster))), unique(umap_df$Cluster))
-
-# Overwriting the color for specific IDs to 'red'
-cluster_colors[cluster_colors %in% specific_ids] <- 'red'
-
-# Plotting the UMAP results with k-means clusters colored and specific IDs labeled in black
-ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
-  geom_point(aes(color = Cluster), alpha = 0.5, size = 2) + # Color points based on cluster assignment
-  geom_text(aes(label = IDLabels), color = "black", check_overlap = TRUE, hjust = 0.5, vjust = 0.5, size = 3) +
-  scale_color_manual(values = cluster_colors) +
-  theme_minimal() +
-  labs(title = "UMAP with k-means clustering") +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(override.aes = list(alpha = 1))) # Ensure legend is not semi-transparent
-
-# Executing the plot
-print(ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
-  geom_point(aes(color = Cluster), alpha = 0.5, size = 2) +
-  geom_text(aes(label = IDLabels), color = "black", check_overlap = FALSE, hjust = 0.5, vjust = 0.5, size = 3) +
-  scale_color_manual(values = cluster_colors) +
-  theme_minimal() +
-  labs(title = "UMAP with k-means centroids plotted (on UMAP dimesnions)") +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(override.aes = list(alpha = 1))))
-
-
-```
-
-```{r}
-# Performing UMAP dimensionality reduction
+# Performing UMAP for dimensionality reduction
 set.seed(42) 
 umap_result <- umap(pc_data_scaled)
 
 # Performing k-means clustering on the UMAP results
 set.seed(42) 
-kmeans_result <- kmeans(umap_result$layout, 8, 30) # Change the number of centers as needed
+kmeans_result <- kmeans(umap_result$layout, 8, 30) 
 
 # Creating a dataframe for plotting UMAP results
 umap_df <- data.frame(UMAP1 = umap_result$layout[,1], UMAP2 = umap_result$layout[,2], Labels = rownames(pc_data_scaled))
@@ -4043,7 +3787,9 @@ representative_ids <- rownames(pc_data_scaled)[closest_points]
 
 # Printing out the representative IDs
 print(representative_ids)
+```
 
+```{r}
 # Defining the specific IDs you want to label in the UMAP plot
 bold_black_ids <- c("CIDH920105", "CHOP780101", "CHOP780201", "CHOP780202", "KLEP840101")
 bold_red_ids <- c("TANS770110", "KARP850103", "CHAM830105", "QIAN880123", "CORJ870102", "ONEK900101", "RACS820105", "TANS770101")
@@ -4069,46 +3815,8 @@ ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
   labs(title = "UMAP with k-means centroids plotted (on UMAP dimensions)") +
   theme(legend.position = "none") +
   guides(color = guide_legend(override.aes = list(alpha = 1)))
-
 ```
 
-
-```{r}
-## Labeliing the calculated representative IDs on the UMAP plot along with IDs suggetsed by Joost.
-
-specific_ids <- c("CIDH920105", "CHOP780101", "CHOP780201", "CHOP780202", "KLEP840101", "KARP850103", "CHAM830105", "ONEK900101")
-
-# Creating a new label column that is blank by default, and label only the specific IDs
-umap_df$IDLabels <- ifelse(umap_df$Labels %in% specific_ids, umap_df$Labels, '')
-
-# Creating a custom color palette for clusters, avoiding the 'red' color to reserve it for specific IDs
-cluster_colors <- setNames(rainbow(length(unique(kmeans_result$cluster))), unique(umap_df$Cluster))
-
-# Overwriting the color for specific IDs to 'red'
-cluster_colors[cluster_colors %in% specific_ids] <- 'red'
-
-# Plotting the UMAP results with k-means clusters colored and specific IDs labeled in black
-ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
-  geom_point(aes(color = Cluster), alpha = 0.5, size = 2) + # Color points based on cluster assignment
-  geom_text(aes(label = IDLabels), color = "black", check_overlap = TRUE, hjust = 0.5, vjust = 0.5, size = 3) +
-  scale_color_manual(values = cluster_colors) +
-  theme_minimal() +
-  labs(title = "UMAP with k-means clustering") +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(override.aes = list(alpha = 1))) # Ensure legend is not semi-transparent
-
-# Executing the plot
-print(ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
-  geom_point(aes(color = Cluster), alpha = 0.5, size = 2) +
-  geom_text(aes(label = IDLabels), color = "black", check_overlap = FALSE, hjust = 0.5, vjust = 0.5, size = 3) +
-  scale_color_manual(values = cluster_colors) +
-  theme_minimal() +
-  labs(title = "UMAP with k-means clustering (on UMAP dimesnions)") +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(override.aes = list(alpha = 1))))
-
-
-```
 
 ```{r}
 # Defining the specific IDs you want to label in the UMAP plot
@@ -4138,97 +3846,3 @@ ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
   guides(color = guide_legend(override.aes = list(alpha = 1)))
 
 ```
-
-
-
-```{r}
-# Defining the specific IDs and their descriptions
-specific_ids <- c("CIDH920105", "CHOP780101", "CHOP780201", "CHOP780202", "KLEP840101",
-                  "KARP850103", "CHAM830105", "ONEK900101")
-descriptions <- c("Normalized average hydrophobicity scales", "Normalized frequency of beta-turn",
-                  "Normalized frequency of alpha-helix", "Normalized frequency of beta-sheet",
-                  "Net charge", "The number of atoms in the side chain labelled 3+1",
-                  "Flexibility parameter for two rigid neighbors", "Delta G values for the peptides extrapolated to 0 M urea")
-
-# Creating a named vector for easy lookup
-descriptions_map <- setNames(descriptions, specific_ids)
-
-# Updating the IDLabels column to include the description
-umap_df$IDLabels <- ifelse(umap_df$Labels %in% specific_ids, paste(umap_df$Labels, ":", descriptions_map[umap_df$Labels]), '')
-
-# Getting unique clusters excluding the specific IDs
-unique_clusters <- setdiff(unique(umap_df$Cluster), specific_ids)
-
-# Creating a custom color palette for clusters, ensuring it matches the number of unique cluster identifiers
-cluster_colors <- setNames(rainbow(length(unique_clusters)), unique_clusters)
-
-# Overwriting the color for specific IDs to 'red'
-specific_id_colors <- setNames(rep('red', length(specific_ids)), specific_ids)
-full_colors <- c(cluster_colors, specific_id_colors)
-
-# Ensuring that the color vector has entries for all possible clusters
-full_colors <- full_colors[as.character(umap_df$Cluster)]
-
-# Plotting the UMAP results with enhanced labeling
-ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
-  geom_point(aes(color = as.factor(Cluster)), alpha = 0.5, size = 2) +
-  geom_text(aes(label = IDLabels), color = "black", check_overlap = TRUE, hjust = 0.5, vjust = 0.5, size = 3) +
-  scale_color_manual(values = full_colors) +
-  theme_minimal() +
-  labs(title = "UMAP with k-means clustering") +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(override.aes = list(alpha = 1)))
-
-# Executing the plot with annotations
-print(ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
-  geom_point(aes(color = as.factor(Cluster)), alpha = 0.5, size = 2) +
-  geom_text(aes(label = IDLabels), color = "black", check_overlap = TRUE, hjust = 0.5, vjust = 0.5, size = 3) +
-  scale_color_manual(values = full_colors) +
-  theme_minimal() +
-  labs(title = "UMAP with k-means clustering (on UMAP dimensions)") +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(override.aes = list(alpha = 1))))
-
-```
-
-```{r}
-## Visualizing k-means cluster (on raw data) on UMAP plot
-# Compute the k-means cluster object for k clusters
-set.seed(42) # Set a random seed for reproducibility
-k <- 5 # Number of clusters
-pc_kmeans <- kmeans(pc_data_scaled,5,20)
-
-# Perform UMAP
-set.seed(10)
-umap_result <- umap(pc_data_scaled)
-
-# Create a dataframe for plotting
-plot_data <- data.frame(UMAP1 = umap_result$layout[,1],
-                        UMAP2 = umap_result$layout[,2],
-                        Cluster = as.factor(pc_kmeans$cluster))
-
-# Plotting using ggplot2
-ggplot(plot_data, aes(x = UMAP1, y = UMAP2, color = Cluster)) +
-  geom_point(alpha = 0.8) + # Set transparency to see overlapping points
-  scale_color_brewer(palette = "Set1") + # Color palette for clusters
-  theme_minimal() +
-  labs(title = "UMAP visualization with k-means clusters",
-       x = "UMAP Dimension 1",
-       y = "UMAP Dimension 2") +
-  theme(legend.title = element_blank()) # Remove legend title
-
-# Executing the plot
-print(ggplot(plot_data, aes(x = UMAP1, y = UMAP2, color = Cluster)) +
-        geom_point(alpha = 0.8) +
-        scale_color_brewer(palette = "Set1") +
-        theme_minimal() +
-        labs(title = "UMAP visualization with k-means clusters",
-             x = "UMAP Dimension 1",
-             y = "UMAP Dimension 2") +
-        theme(legend.title = element_blank()))
-
-
-
-```
-
-
