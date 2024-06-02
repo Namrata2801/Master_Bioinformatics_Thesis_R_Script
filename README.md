@@ -1,4 +1,4 @@
-# Master Thesis R Scripts
+# Master Thesis R Script and data files
 
 This repository contains the R scripts used in my master thesis titled "Exploring The Dark Proteome: Microproteins."
 
